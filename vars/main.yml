@@ -1,0 +1,4 @@
+---
+# Elasticsearch ports
+es_http_port: 9500
+es_transport_port: 9600
