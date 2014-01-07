@@ -1,0 +1,6 @@
+---
+- name: Install elasticsearch
+
+- name: Install elasticsearch repo
+
+- name: Enable elasticsearch service

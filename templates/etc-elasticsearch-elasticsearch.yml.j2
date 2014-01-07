@@ -46,7 +46,7 @@ threadpool.index.queue_size: 100
 # Cluster name identifies your cluster for auto-discovery. If you're running
 # multiple clusters on the same network, make sure you're using unique names.
 #
-cluster.name: royallstash
+cluster.name: {{ es_cluster_name }}
 
 
 #################################### Node #####################################
@@ -54,7 +54,7 @@ cluster.name: royallstash
 # Node names are generated dynamically on startup, so you're relieved
 # from configuring them manually. You can tie this node to a specific name:
 #
-node.name: "stash1"
+node.name: "{{ es_node_name }}"
 
 # Every node can be configured to allow or deny being eligible as the master,
 # and to allow or deny to store the data.
@@ -231,11 +231,11 @@ index.number_of_replicas: 1
 
 # Set both 'bind_host' and 'publish_host':
 #
-network.host: 192.168.40.254
+network.host: {{ ansible_default_ipv4.address }}
 
 # Set a custom port for the node to node communication (9300 by default):
 #
-transport.tcp.port: 9600
+transport.tcp.port: {{ es_node_comm_port }}
 
 # Enable compression for all communication between nodes (disabled by default):
 #
@@ -243,7 +243,7 @@ transport.tcp.port: 9600
 
 # Set a custom port to listen for HTTP traffic:
 #
-http.port: 9500
+http.port: {{ es_http_port }}
 
 # Set a custom allowed content length:
 #
