@@ -1,0 +1,7 @@
+---
+- name: Restart elasticsearch
+  service: name=elasticsearch state=restarted sleep=15
+
+- name: Install Elasticsearch GPG key
+  rpm_key: key=/etc/pki/rpm-gpg/GPG-KEY-elasticsearch state=present
+  tags: yum

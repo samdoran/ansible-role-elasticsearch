@@ -1,6 +1,53 @@
 ---
-- name: Install elasticsearch
-
 - name: Install elasticsearch repo
+  copy: src=etc-yum.repos.d-elasticsearch-0.90.repo
+        dest=/etc/yum.repos.d/elasticsearch-0.90.repo
+        owner=root
+        group=root
+        mode=0644
+  tags:
+    - elasticsearch
+    - yum
 
-- name: Enable elasticsearch service
+- name: Copy Elasticsearch GPG key
+  copy: src=GPG-KEY-elasticsearch
+        dest=/etc/pki/rpm-gpg/GPG-KEY-elasticsearch
+        owner=root
+        group=root
+        mode=0644
+  tags:
+    - elasticsearch
+    - yum
+  notify: Install Elasticsearch GPG key
+
+- name: Install elasticsearch
+  yum: name=elasticsearch state=present
+  tags:
+    - elasticsearch
+
+- name: Enable elasticsearch
+  service: name=elasticsearch enabled=yes state=started
+  tags:
+    - elasticsearch
+
+- name: Copy main elasticsearch config
+  template: src=etc-elasticsearch-elasticsearch.yml.j2
+            dest=/etc/elasticsearch/elasticsearch.yml
+            owner=root
+            group=root
+            mode=0644
+  tags:
+    - elasticsearch
+    - config
+  notify: Restart elasticsearch
+
+- name: Copy elasticsearch system config
+  copy: src=etc-sysconfig-elasticsearch
+        dest=/etc/sysconfig/elasticsearch
+        owner=root
+        group=root
+        mode=0644
+  tags:
+    - elasticsearch
+    - config
+  notify: Restart elasticsearch
