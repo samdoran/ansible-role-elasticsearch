@@ -51,3 +51,24 @@
     - elasticsearch
     - config
   notify: Restart elasticsearch
+
+- name: Check for elasticsearch HQ plugin
+  command: ls /usr/share/elasticsearch/plugins/HQ
+  ignore_errors: yes
+  register: result
+  tags: plugins
+
+- name: Remove elasticsearch HQ plugin
+  command: ./plugin -remove royrusso/elasticsearch-HQ
+            chdir=/usr/share/elasticsearch/bin
+  when: result.rc == 0
+  tags:
+    - elasticsearch
+    - plugins
+
+- name: Install elasticsearch HQ plugin
+  command: ./plugin -install royrusso/elasticsearch-HQ
+            chdir=/usr/share/elasticsearch/bin
+  tags:
+      - elasticsearch
+      - plugins
