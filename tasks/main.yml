@@ -1,7 +1,7 @@
 ---
 - name: Install packages
   yum: name={{ item }} state=present
-  tags: yum
+  tags: packages
   with_items:
     - java-1.7.0-openjdk
 
