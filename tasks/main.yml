@@ -1,4 +1,10 @@
 ---
+- name: Install packages
+  yum: name={{ item }} state=present
+  tags: yum
+  with_items:
+    - java-1.7.0-openjdk
+
 - name: Install elasticsearch repo
   copy: src=etc-yum.repos.d-elasticsearch-0.90.repo
         dest=/etc/yum.repos.d/elasticsearch-0.90.repo
