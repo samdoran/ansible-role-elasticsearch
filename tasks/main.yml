@@ -1,7 +1,9 @@
 ---
 - name: Install packages
   yum: name={{ item }} state=present
-  tags: packages
+  tags:
+    - elasticsearch
+    - packages
   with_items:
     - java-1.7.0-openjdk
 
@@ -62,7 +64,9 @@
   command: ls /usr/share/elasticsearch/plugins/HQ
   ignore_errors: yes
   register: result
-  tags: plugins
+  tags:
+    - elasticsearch
+    - plugins
 
 - name: Remove elasticsearch HQ plugin
   command: ./plugin -remove royrusso/elasticsearch-HQ
