@@ -26,7 +26,7 @@
   tags:
     - elasticsearch
     - yum
-  notify: Install Elasticsearch GPG key
+  notify: install elasticsearch gpg key
 
 - name: Install elasticsearch
   yum: name=elasticsearch state=present
