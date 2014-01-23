@@ -47,7 +47,7 @@
   tags:
     - elasticsearch
     - config
-  notify: Restart elasticsearch
+  notify: restart elasticsearch
 
 - name: Copy elasticsearch system config
   copy: src=etc-sysconfig-elasticsearch
@@ -58,7 +58,7 @@
   tags:
     - elasticsearch
     - config
-  notify: Restart elasticsearch
+  notify: restart elasticsearch
 
 - name: Check for elasticsearch HQ plugin
   stat: path=/usr/share/elasticsearch/plugins/HQ
