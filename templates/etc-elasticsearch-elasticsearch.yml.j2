@@ -230,11 +230,11 @@ index.number_of_replicas: 1
 
 # Set both 'bind_host' and 'publish_host':
 #
-network.host: {{ ansible_default_ipv4.address }}
+# network.host: {{ ansible_default_ipv4.address }}
 
 # Set a custom port for the node to node communication (9300 by default):
 #
-transport.tcp.port: {{ es_node_comm_port }}
+transport.tcp.port: {{ es_transport_port }}
 
 # Enable compression for all communication between nodes (disabled by default):
 #
