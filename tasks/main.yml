@@ -65,7 +65,7 @@
   register: result
   tags:
     - elasticsearch
-    - plugins
+    - esplugins
 
 - name: Remove elasticsearch HQ plugin
   command: ./plugin -remove royrusso/elasticsearch-HQ
@@ -73,21 +73,21 @@
   when: result is defined and result.stat.exists == True
   tags:
     - elasticsearch
-    - plugins
+    - esplugins
 
 - name: Install elasticsearch HQ plugin
   command: ./plugin -install royrusso/elasticsearch-HQ
             chdir=/usr/share/elasticsearch/bin
   tags:
       - elasticsearch
-      - plugins
+      - esplugins
 
 - name: Check for elasticsearch head plugin
   stat: path=/usr/share/elasticsearch/plugins/head
   register: result
   tags:
     - elasticsearch
-    - plugins
+    - esplugins
 
 - name: Remove elasticsearch head plugin
   command: ./plugin -remove mobz/elasticsearch-head
@@ -95,11 +95,11 @@
   when: result is defined and result.stat.exists == True
   tags:
     - elasticsearch
-    - plugins
+    - esplugins
 
 - name: Install elasticsearch head plugin
   command: ./plugin -install mobz/elasticsearch-head
             chdir=/usr/share/elasticsearch/bin
   tags:
       - elasticsearch
-      - plugins
+      - esplugins
