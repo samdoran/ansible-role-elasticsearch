@@ -1,21 +1,17 @@
 ---
 - name: Install packages
   yum: name={{ item }} state=present
-  tags:
-    - elasticsearch
-    - packages
+  tags: [ "elasticsearch" , "packages" ]
   with_items:
     - java-1.7.0-openjdk
 
 - name: Install elasticsearch repo
-  copy: src=etc-yum.repos.d-elasticsearch-0.90.repo
-        dest=/etc/yum.repos.d/elasticsearch-0.90.repo
+  copy: src=elasticsearch-1.0.repo
+        dest=/etc/yum.repos.d/elasticsearch-1.0.repo
         owner=root
         group=root
         mode=0644
-  tags:
-    - elasticsearch
-    - yum
+  tags: [ "elasticsearch" , "yum" ]
 
 - name: Copy Elasticsearch GPG key
   copy: src=GPG-KEY-elasticsearch
@@ -23,30 +19,24 @@
         owner=root
         group=root
         mode=0644
-  tags:
-    - elasticsearch
-    - yum
+  tags: [ "elasticsearch" , "yum" ]
   notify: install elasticsearch gpg key
 
 - name: Install elasticsearch
   yum: name=elasticsearch state=present
-  tags:
-    - elasticsearch
+  tags: [ "elasticsearch" , "name" ]
 
 - name: Enable elasticsearch
   service: name=elasticsearch enabled=yes state=started
-  tags:
-    - elasticsearch
+  tags: [ "elasticsearch" , "name" ]
 
 - name: Copy main elasticsearch config
-  template: src=etc-elasticsearch-elasticsearch.yml.j2
+  template: src=elasticsearch.yml.j2
             dest=/etc/elasticsearch/elasticsearch.yml
             owner=root
             group=root
             mode=0644
-  tags:
-    - elasticsearch
-    - config
+  tags: [ "elasticsearch" , "config" ]
   notify: restart elasticsearch
 
 - name: Copy elasticsearch system config
@@ -55,51 +45,37 @@
         owner=root
         group=root
         mode=0644
-  tags:
-    - elasticsearch
-    - config
+  tags: [ "elasticsearch" , "config" ]
   notify: restart elasticsearch
 
 - name: Check for elasticsearch HQ plugin
   stat: path=/usr/share/elasticsearch/plugins/HQ
   register: result
-  tags:
-    - elasticsearch
-    - esplugins
+  tags: [ "elasticsearch" , "esplugins" ]
 
 - name: Remove elasticsearch HQ plugin
   command: ./plugin -remove royrusso/elasticsearch-HQ
             chdir=/usr/share/elasticsearch/bin
   when: result is defined and result.stat.exists == True
-  tags:
-    - elasticsearch
-    - esplugins
+  tags: [ "elasticsearch" , "esplugins" ]
 
 - name: Install elasticsearch HQ plugin
   command: ./plugin -install royrusso/elasticsearch-HQ
             chdir=/usr/share/elasticsearch/bin
-  tags:
-      - elasticsearch
-      - esplugins
+  tags: [ "elasticsearch" , "esplugins" ]
 
 - name: Check for elasticsearch head plugin
   stat: path=/usr/share/elasticsearch/plugins/head
   register: result
-  tags:
-    - elasticsearch
-    - esplugins
+  tags: [ "elasticsearch" , "esplugins" ]
 
 - name: Remove elasticsearch head plugin
   command: ./plugin -remove mobz/elasticsearch-head
             chdir=/usr/share/elasticsearch/bin
   when: result is defined and result.stat.exists == True
-  tags:
-    - elasticsearch
-    - esplugins
+  tags: [ "elasticsearch" , "esplugins" ]
 
 - name: Install elasticsearch head plugin
   command: ./plugin -install mobz/elasticsearch-head
             chdir=/usr/share/elasticsearch/bin
-  tags:
-      - elasticsearch
-      - esplugins
+  tags: [ "elasticsearch" , "esplugins" ]
