@@ -4,4 +4,3 @@
 
 - name: install elasticsearch gpg key
   rpm_key: key=/etc/pki/rpm-gpg/GPG-KEY-elasticsearch state=present
-  tags: yum
