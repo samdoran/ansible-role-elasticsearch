@@ -36,7 +36,7 @@
             owner=root
             group=root
             mode=0644
-  tags: [ "elasticsearch" , "config" ]
+  tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
 
 - name: Copy elasticsearch system config
@@ -45,8 +45,12 @@
         owner=root
         group=root
         mode=0644
-  tags: [ "elasticsearch" , "config" ]
+  tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
+
+- name: Copy elasticsearch synthetic field script
+  copy: src=kibana dest=/etc/elasticsearch/scripts owner=root group=root mode=0644 directory_mode=755
+  tags: [ 'elasticsearch' , 'esconfig' ]
 
 - name: Check for elasticsearch HQ plugin
   stat: path=/usr/share/elasticsearch/plugins/HQ
