@@ -6,8 +6,8 @@
     - java-1.7.0-openjdk
 
 - name: Install elasticsearch repo
-  copy: src=elasticsearch-1.0.repo
-        dest=/etc/yum.repos.d/elasticsearch-1.0.repo
+  copy: src=elasticsearch-1.1.repo
+        dest=/etc/yum.repos.d/elasticsearch-1.1.repo
         owner=root
         group=root
         mode=0644
