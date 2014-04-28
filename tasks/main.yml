@@ -48,6 +48,10 @@
   tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
 
+- name: Create /etc/elasticsearch/scripts
+  file: path=/etc/elasticsearch/scripts state=directory owner=root group=root directory_mode=755
+  tags: [ 'elasticsearch' , 'esconfig' ]
+
 - name: Copy elasticsearch synthetic field script
   copy: src=kibana dest=/etc/elasticsearch/scripts owner=root group=root mode=0644 directory_mode=755
   tags: [ 'elasticsearch' , 'esconfig' ]
