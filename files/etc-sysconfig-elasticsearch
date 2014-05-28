@@ -11,7 +11,7 @@ ES_HEAP_SIZE=4g
 #ES_DIRECT_SIZE=
 
 # Additional Java OPTS
-#ES_JAVA_OPTS=
+ES_JAVA_OPTS="-Xms3932m -Xmx6144m -Xmn128m -Xss512k -XX:MaxPermSize=128m"
 
 # Maximum number of open files
 MAX_OPEN_FILES=65535
