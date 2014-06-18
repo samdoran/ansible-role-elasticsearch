@@ -3,3 +3,7 @@
 es_http_port: 9200
 es_transport_port: 9300
 es_cluster_name: elasticsearch
+
+# ES Java Options
+es_java_opts_xmn: 128m
+es_java_opts_xss: 256k

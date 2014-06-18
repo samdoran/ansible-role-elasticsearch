@@ -1,6 +1,6 @@
 ---
 - name: Install packages
-  yum: name={{ item }} state=present
+  yum: name={{ item }} state=latest
   tags: [ "elasticsearch" , "packages" ]
   with_items:
     - java-1.7.0-openjdk
@@ -26,7 +26,7 @@
   yum: name=elasticsearch state=present
   tags: [ "elasticsearch" , "name" ]
 
-- name: Enable elasticsearch
+- name: Start and enable elasticsearch
   service: name=elasticsearch enabled=yes state=started
   tags: [ "elasticsearch" , "name" ]
 
@@ -40,11 +40,11 @@
   notify: restart elasticsearch
 
 - name: Copy elasticsearch system config
-  copy: src=etc-sysconfig-elasticsearch
-        dest=/etc/sysconfig/elasticsearch
-        owner=root
-        group=root
-        mode=0644
+  template: src=etc-sysconfig-elasticsearch.j2
+            dest=/etc/sysconfig/elasticsearch
+            owner=root
+            group=root
+            mode=0644
   tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
 

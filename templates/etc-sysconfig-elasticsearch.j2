@@ -2,7 +2,7 @@
 ES_HOME=/usr/share/elasticsearch
 
 # Heap Size (defaults to 256m min, 1g max)
-ES_HEAP_SIZE=4g
+ES_HEAP_SIZE={{ ansible_memtotal_mb // 2 }}
 
 # Heap new generation
 #ES_HEAP_NEWSIZE=
@@ -11,7 +11,7 @@ ES_HEAP_SIZE=4g
 #ES_DIRECT_SIZE=
 
 # Additional Java OPTS
-ES_JAVA_OPTS="-Xms3932m -Xmx6144m -Xmn128m -Xss512k -XX:MaxPermSize=128m"
+ES_JAVA_OPTS="-Xms{{ ansible_memtotal_mb // 2 }}m -Xmx{{ (ansible_memtotal_mb * 0.75) | int }}m -Xmn{{ es_java_opts_xmn }} -Xss{{ es_java_opts_xss }} -XX:MaxPermSize=128m"
 
 # Maximum number of open files
 MAX_OPEN_FILES=65535
