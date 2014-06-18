@@ -1,38 +1,33 @@
-Role Name
+elasticsearch
 ========
 
-A brief description of the role goes here.
+Install elasticsearch. Heap size is dynamically calculated based on total system memory.
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+java 1.7.0_55 or 1.8.0_5
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+**es_cluster_name:**    Name of the cluster (Default: elasticsearch)
+
+**es_transport_port:**  Node to node communication port (Default: 9300)
+
+**es_http_port:**       HTTP port (Default: 9200)
+
+**es_java_opts_xmn:**   ES java options new heap size (Default 128m)
+
+**es_java_opts_xss:**   ES java stack memory (Default 256k)
+
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
-
-Example Playbook
--------------------------
-
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
-
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+None
 
 License
 -------
 
-BSD
-
-Author Information
-------------------
-
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+MIT
