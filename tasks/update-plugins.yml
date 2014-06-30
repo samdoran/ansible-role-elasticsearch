@@ -1,0 +1,32 @@
+---
+- name: Check for elasticsearch HQ plugin
+  stat: path=/usr/share/elasticsearch/plugins/HQ
+  register: result
+  tags: [ "elasticsearch" , "esplugins" ]
+
+- name: Remove elasticsearch HQ plugin
+  command: ./plugin -remove royrusso/elasticsearch-HQ
+            chdir=/usr/share/elasticsearch/bin
+  when: result is defined and result.stat.exists == True
+  tags: [ "elasticsearch" , "esplugins" ]
+
+- name: Install elasticsearch HQ plugin
+  command: ./plugin -install royrusso/elasticsearch-HQ
+            chdir=/usr/share/elasticsearch/bin
+  tags: [ "elasticsearch" , "esplugins" ]
+
+- name: Check for elasticsearch head plugin
+  stat: path=/usr/share/elasticsearch/plugins/head
+  register: result
+  tags: [ "elasticsearch" , "esplugins" ]
+
+- name: Remove elasticsearch head plugin
+  command: ./plugin -remove mobz/elasticsearch-head
+            chdir=/usr/share/elasticsearch/bin
+  when: result is defined and result.stat.exists == True
+  tags: [ "elasticsearch" , "esplugins" ]
+
+- name: Install elasticsearch head plugin
+  command: ./plugin -install mobz/elasticsearch-head
+            chdir=/usr/share/elasticsearch/bin
+  tags: [ "elasticsearch" , "esplugins" ]
