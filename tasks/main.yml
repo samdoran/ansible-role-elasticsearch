@@ -24,6 +24,7 @@
 
 - name: Install elasticsearch
   yum: name=elasticsearch state=present
+  register: es_install_status
   tags: [ "elasticsearch" , "name" ]
 
 - name: Start and enable elasticsearch
@@ -56,4 +57,4 @@
   copy: src=kibana dest=/etc/elasticsearch/scripts owner=root group=root mode=0644 directory_mode=755
   tags: [ 'elasticsearch' , 'esconfig' ]
 
-- { include: update-plugins.yml, when: es_update_plugins }
+- { include: update-plugins.yml, when: es_update_plugins or es_install_status.changed }
