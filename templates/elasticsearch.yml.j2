@@ -104,7 +104,7 @@ node.name: "{{ ansible_hostname }}"
 
 # Set the number of shards (splits) of an index (5 by default):
 #
-index.number_of_shards: 10
+index.number_of_shards: {{ es_number_of_shards }}
 
 # Set the number of replicas (additional copies) of an index (1 by default):
 #
