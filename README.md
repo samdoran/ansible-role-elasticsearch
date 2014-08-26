@@ -23,6 +23,8 @@ Role Variables
 
 **es_update_plugins**   Whether or not to update plugins (Default: false)
 
+**es_number_of_shards**  Number of shards (Default: 5)
+
 
 Example Playbook
 ------------
