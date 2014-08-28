@@ -11,15 +11,17 @@ java 1.7.0_55 or 1.8.0_5
 Role Variables
 --------------
 
-**es_cluster_name:**    Name of the cluster (Default: elasticsearch)
+**es_cluster_name**    Name of the cluster (Default: elasticsearch)
 
-**es_transport_port:**  Node to node communication port (Default: 9300)
+**es_transport_port**  Node to node communication port (Default: 9300)
 
-**es_http_port:**       HTTP port (Default: 9200)
+**es_http_port**       HTTP port (Default: 9200)
 
-**es_java_opts_xmn:**   ES java options new heap size (Default: 128m)
+**es_java_opts_xmn**   ES java options new heap size (Default: 128m)
 
-**es_java_opts_xss:**   ES java stack memory (Default: 256k)
+**es_java_opts_xss**   ES java stack memory (Default: 256k)
+
+**es_heap_size**        Memory heap size for ES (Default: 50% of total system memory in MB)
 
 **es_update_plugins**   Whether or not to update plugins (Default: false)
 
