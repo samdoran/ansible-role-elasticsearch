@@ -12,3 +12,4 @@ es_java_opts_xmn: 128m
 es_java_opts_xss: 256k
 
 es_update_plugins: false
+es_disable_swap: true

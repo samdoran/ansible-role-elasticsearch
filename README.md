@@ -29,6 +29,8 @@ Role Variables
 
 **es_multicast_port**    Multicast port used for ES node discovery (Default: 54328)
 
+**es_disable_swap**       Whether or not to disable swap on the system (Default: true)
+
 
 Example Playbook
 ------------
@@ -40,12 +42,12 @@ This role works best with a few pre and post tasks as well as some cluster healt
       serial: 1
 
       vars:
-        uribody_true:  '{"transient":{"cluster.routing.allocation.enable":"none"}}'
+        uribody_true: '{"transient":{"cluster.routing.allocation.enable":"none"}}'
         uribody_false: '{"transient":{"cluster.routing.allocation.enable":"all"}}'
 
       pre_tasks:
         - name: Disable shard allocation for the cluster
-          uri:  url=http://localhost:{{ es_http_port }}/_cluster/settings method=PUT body='{{ uribody_true }}'
+          uri: url=http://localhost:{{ es_http_port }}/_cluster/settings method=PUT body='{{ uribody_true }}'
           tags: elasticsearch
 
       roles:
@@ -53,21 +55,22 @@ This role works best with a few pre and post tasks as well as some cluster healt
         - elasticsearch
 
       post_tasks:
-        - name:     wait for elasticsearch node to come back up
+        - name: Wait for elasticsearch node to come back up
           wait_for: port={{ es_transport_port }} delay=30
-          tags:     elasticsearch
+          tags: [ "elasticsearch" , "esconfig" ]
 
         - name: Enable shard allocation for the cluster
-          uri:  url=http://localhost:{{ es_http_port }}/_cluster/settings method=PUT body='{{ uribody_false }}'
-          tags: elasticsearch
+          uri: url=http://localhost:{{ es_http_port }}/_cluster/settings method=PUT body='{{ uribody_false }}'
+          tags: [ "elasticsearch" , "esconfig" ]
 
-        - name:     Wait for cluster health to recover
-          uri:      url=http://localhost:{{ es_http_port }}/_cluster/health method=GET
+        - name: Wait for cluster health to recover
+          uri: url=http://localhost:{{ es_http_port }}/_cluster/health method=GET
           register: response
           until:    "response.json.unassigned_shards < 700"
-          retries:  5
-          delay:    120
-          tags:     elasticsearch
+          retries: 5
+          delay: 120
+          tags:     [ "elasticsearch" , "esconfig" ]
+
 
 License
 -------
