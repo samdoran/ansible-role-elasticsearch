@@ -10,8 +10,8 @@ http.port: {{ es_http_port }}
 discovery.zen.ping.multicast.enabled: true
 # Make sure we see at least one other node
 discovery.zen.minimum_master_nodes: 2
-discovery.zen.ping.multicast.group: 224.2.2.4
-discovery.zen.ping.multicast.port: 54328
+discovery.zen.ping.multicast.group: {{ es_multicast_ip }}
+discovery.zen.ping.multicast.port: {{ es_multicast_port }}
 discovery.zen.ping.multicast.ttl: 5
 
 # Indexing Settings for Writes

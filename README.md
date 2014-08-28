@@ -25,6 +25,10 @@ Role Variables
 
 **es_number_of_shards**  Number of shards (Default: 5)
 
+**es_multicast_ip**      Multicast address used for ES node discovery (Default: 224.2.2.4)
+
+**es_multicast_port**    Multicast port used for ES node discovery (Default: 54328)
+
 
 Example Playbook
 ------------
