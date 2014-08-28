@@ -57,4 +57,9 @@
   copy: src=kibana dest=/etc/elasticsearch/scripts owner=root group=root mode=0644 directory_mode=755
   tags: [ 'elasticsearch' , 'esconfig' ]
 
+- name: Disable swap in /etc/fstab
+  lineinfile: "state=present backup=yes dest=/etc/fstab regexp='(^.*swap.*$)' line='#\\1' backrefs=yes"
+  notify: turn off swap
+  tags: [ 'elasticsearch' , 'esconfig' ]
+
 - { include: update-plugins.yml, when: es_update_plugins or es_install_status.changed }

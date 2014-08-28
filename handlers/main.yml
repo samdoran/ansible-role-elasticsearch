@@ -4,3 +4,6 @@
 
 - name: install elasticsearch gpg key
   rpm_key: key=/etc/pki/rpm-gpg/GPG-KEY-elasticsearch state=present
+
+- name: turn off swap
+  command: swapoff -a
