@@ -11,7 +11,7 @@ ES_HEAP_SIZE={{ ansible_memtotal_mb // 2 }}m
 #ES_DIRECT_SIZE=
 
 # Additional Java OPTS
-ES_JAVA_OPTS="-Xms{{ ansible_memtotal_mb // 2 }}m -Xmx{{ (ansible_memtotal_mb * 0.75) | int }}m -Xmn{{ es_java_opts_xmn }} -Xss{{ es_java_opts_xss }} -XX:MaxPermSize=128m"
+#ES_JAVA_OPTS="-Xms{{ ansible_memtotal_mb // 2 }}m -Xmx{{ (ansible_memtotal_mb * 0.75) | int }}m -Xmn{{ es_java_opts_xmn }} -Xss{{ es_java_opts_xss }} -XX:MaxPermSize=128m"
 
 # Maximum number of open files
 MAX_OPEN_FILES=65535
