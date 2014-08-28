@@ -6,19 +6,11 @@
     - java-1.7.0-openjdk
 
 - name: Install elasticsearch repo
-  copy: src=elasticsearch-1.2.repo
-        dest=/etc/yum.repos.d/elasticsearch-1.2.repo
-        owner=root
-        group=root
-        mode=0644
+  copy: src=elasticsearch-1.2.repo dest=/etc/yum.repos.d/elasticsearch-1.2.repo owner=root group=root mode=0644
   tags: [ "elasticsearch" , "yum" ]
 
 - name: Copy Elasticsearch GPG key
-  copy: src=GPG-KEY-elasticsearch
-        dest=/etc/pki/rpm-gpg/GPG-KEY-elasticsearch
-        owner=root
-        group=root
-        mode=0644
+  copy: src=GPG-KEY-elasticsearch dest=/etc/pki/rpm-gpg/GPG-KEY-elasticsearch owner=root group=root mode=0644
   tags: [ "elasticsearch" , "yum" ]
   notify: install elasticsearch gpg key
 
@@ -32,20 +24,12 @@
   tags: [ "elasticsearch" , "name" ]
 
 - name: Copy main elasticsearch config
-  template: src=elasticsearch.yml.j2
-            dest=/etc/elasticsearch/elasticsearch.yml
-            owner=root
-            group=root
-            mode=0644
+  template: src=elasticsearch.yml.j2 dest=/etc/elasticsearch/elasticsearch.yml owner=root group=root mode=0644
   tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
 
 - name: Copy elasticsearch system config
-  template: src=etc-sysconfig-elasticsearch.j2
-            dest=/etc/sysconfig/elasticsearch
-            owner=root
-            group=root
-            mode=0644
+  template: src=etc-sysconfig-elasticsearch.j2 dest=/etc/sysconfig/elasticsearch owner=root group=root mode=0644
   tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
 
