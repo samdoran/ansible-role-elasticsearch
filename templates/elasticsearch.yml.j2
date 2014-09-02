@@ -1,46 +1,55 @@
+# --- Cluster --- #
 cluster.name: {{ es_cluster_name }}
+
+
+# --- Node --- #
 node.name: "{{ ansible_hostname }}"
+node.master: {{ es_node_master }}
+node.data: {{ es_node_data }}
 
-transport.tcp.port: {{ es_transport_port }}
+
+# --- Index --- #
+index.number_of_shards: {{ es_number_of_shards }}
+index.number_of_replicas: {{ es_number_of_replicas }}
+# index.refresh_interval: 3  # Boost freshness of data.
+# index.translog.flush_threshold_ops: 50000
+# indices.memory.index_buffer_size: 50%
 
 
+# --- Memory --- #
+bootstrap.mlockall: true
+
+
+# --- Network and HTTP --- #
 # Only listen on localhost (run behind Nginx for SSL)
+transport.tcp.port: {{ es_transport_port }}
 http.port: {{ es_http_port }}
 
+
+# --- Gateway --- #
+gateway.recover_after_data_nodes: {{ es_number_of_nodes }}
+
+
+# --- Discovery --- #
+discovery.zen.minimum_master_nodes: {{ ((es_number_of_nodes | int) // 2) + 1 }}
 discovery.zen.ping.multicast.enabled: true
-# Make sure we see at least one other node
-discovery.zen.minimum_master_nodes: 2
 discovery.zen.ping.multicast.group: {{ es_multicast_ip }}
 discovery.zen.ping.multicast.port: {{ es_multicast_port }}
 discovery.zen.ping.multicast.ttl: 5
 
-# Indexing Settings for Writes
-indices.memory.index_buffer_size: 50%
-index.number_of_shards: {{ es_number_of_shards }}
-index.number_of_replicas: 1
-index.refresh_interval: 3  # Boost freshness of data.
-index.translog.flush_threshold_ops: 50000
 
-# Do not swap ES processes
-# Requires unlimit -l unlimited for elasticsearch user
-bootstrap.mlockall: true
-
-## Threadpool Settings ##
-
+# --- Threadpool Settings --- #
 # Search pool
-threadpool.search.type: fixed
-threadpool.search.size: 20
-threadpool.search.queue_size: 100
+# threadpool.search.type: fixed
+# threadpool.search.size: 20
+# threadpool.search.queue_size: 100
 
 # Bulk pool
-threadpool.bulk.type: fixed
-threadpool.bulk.size: 60
-threadpool.bulk.queue_size: 300
+# threadpool.bulk.type: fixed
+# threadpool.bulk.size: 60
+# threadpool.bulk.queue_size: 300
 
 # Index pool
-threadpool.index.type: fixed
-threadpool.index.size: 20
-threadpool.index.queue_size: 100
-
-# Are we a data node?
-node.data: true
+# threadpool.index.type: fixed
+# threadpool.index.size: 20
+# threadpool.index.queue_size: 100
