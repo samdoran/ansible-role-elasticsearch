@@ -7,8 +7,9 @@ es_multicast_port: 54328
 es_cluster_name: elasticsearch
 es_number_of_shards: 5
 es_number_of_replicas: 1
+es_group_name: "es"
 es_heap_size: "{{ ansible_memtotal_mb // 2 }}m"
-es_number_of_nodes: "{{ groups.es | length }}"
+es_number_of_nodes: "{{ groups['{{ es_group_name }}'] | length }}"
 es_node_master: "true"
 es_node_data: "true"
 
