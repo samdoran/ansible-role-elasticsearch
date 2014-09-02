@@ -6,7 +6,7 @@
     - java-1.7.0-openjdk
 
 - name: Install elasticsearch repo
-  copy: src=elasticsearch-1.2.repo dest=/etc/yum.repos.d/elasticsearch-1.2.repo owner=root group=root mode=0644
+  copy: src=elasticsearch-1.3.repo dest=/etc/yum.repos.d/elasticsearch-1.3.repo owner=root group=root mode=0644
   tags: [ "elasticsearch" , "yum" ]
 
 - name: Copy Elasticsearch GPG key
@@ -17,6 +17,7 @@
 - name: Install elasticsearch
   yum: name=elasticsearch state=present
   register: es_install_status
+  notify: restart elasticsearch
   tags: [ "elasticsearch" , "name" ]
 
 - name: Start and enable elasticsearch
@@ -32,10 +33,6 @@
   template: src=etc-sysconfig-elasticsearch.j2 dest=/etc/sysconfig/elasticsearch owner=root group=root mode=0644
   tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
-
-- name: Copy memlock settings to allow elasticsearch user to allocate unlimited memory
-  copy: src=80-memlock.conf dest=/etc/security/limits.d/80-memlock.conf owner=root group=root mode=0644
-  tags: [ "elasticsearch" , "esconfig" ]
 
 - name: Create /etc/elasticsearch/scripts
   file: path=/etc/elasticsearch/scripts state=directory owner=root group=root directory_mode=755
