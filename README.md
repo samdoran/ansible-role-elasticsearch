@@ -11,25 +11,35 @@ java 1.7.0_55 or 1.8.0_5
 Role Variables
 --------------
 
-**es_cluster_name**    Name of the cluster (Default: elasticsearch)
+**es_http_port**       HTTP port (Default: 9200)
 
 **es_transport_port**  Node to node communication port (Default: 9300)
 
-**es_http_port**       HTTP port (Default: 9200)
+**es_cluster_name**    Name of the cluster (Default: elasticsearch)
+
+**es_multicast_ip**      Multicast address used for ES node discovery (Default: 224.2.2.4)
+
+**es_multicast_port**    Multicast port used for ES node discovery (Default: 54328)
+
+**es_cluster_name**     Name of elasticsearch cluster (Default: elasticsearch)
+
+**es_number_of_shards**  Number of shards (Default: 5)
+
+**es_number_of_replacias**  Number of replacias (Default: 1)
+
+**es_group_name**       Name of host group that contains elasticsearch hosts. Used for `es_number_of_nodes` and to calculate `discovery.zen.minimum_master_nodes` (Default: es)
+
+**es_heap_size**        Memory heap size for ES (Default: 50% of total system memory in MB)
+
+**es_node_master**      Whether or not a node can become a master (Default: true)
+
+**es_node_data**      Whether or not a node can hold data (Default: true)
 
 **es_java_opts_xmn**   ES java options new heap size (Default: 128m)
 
 **es_java_opts_xss**   ES java stack memory (Default: 256k)
 
-**es_heap_size**        Memory heap size for ES (Default: 50% of total system memory in MB)
-
 **es_update_plugins**   Whether or not to update plugins (Default: false)
-
-**es_number_of_shards**  Number of shards (Default: 5)
-
-**es_multicast_ip**      Multicast address used for ES node discovery (Default: 224.2.2.4)
-
-**es_multicast_port**    Multicast port used for ES node discovery (Default: 54328)
 
 **es_disable_swap**       Whether or not to disable swap on the system (Default: true)
 
