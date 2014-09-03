@@ -25,7 +25,7 @@ Role Variables
 
 **es_number_of_shards**  Number of shards (Default: 5)
 
-**es_number_of_replacias**  Number of replacias (Default: 1)
+**es_number_of_replicas**  Number of repliacas (Default: 1)
 
 **es_group_name**       Name of host group that contains elasticsearch hosts. Used for `es_number_of_nodes` and to calculate `discovery.zen.minimum_master_nodes` (Default: es)
 
@@ -42,6 +42,8 @@ Role Variables
 **es_update_plugins**   Whether or not to update plugins (Default: false)
 
 **es_disable_swap**       Whether or not to disable swap on the system (Default: true)
+
+**es_number_of_no_data_nodes**   How many nodes have no data, subtracted from number of nodes that need to be up for recovery (es_recovery_nodes).
 
 
 Example Playbook
