@@ -25,7 +25,7 @@ Role Variables
 
 **es_number_of_shards**  Number of shards (Default: 5)
 
-**es_number_of_replicas**  Number of repliacas (Default: 1)
+**es_number_of_replicas**  Number of replicas (Default: 1)
 
 **es_group_name**       Name of host group that contains elasticsearch hosts. Used for `es_number_of_nodes` and to calculate `discovery.zen.minimum_master_nodes` (Default: es)
 
