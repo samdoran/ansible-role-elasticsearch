@@ -11,6 +11,7 @@ node.data: {{ es_node_data }}
 # --- Index --- #
 index.number_of_shards: {{ es_number_of_shards }}
 index.number_of_replicas: {{ es_number_of_replicas }}
+indicies.fielddata.cache.size: 40%
 # index.refresh_interval: 3  # Boost freshness of data.
 # index.translog.flush_threshold_ops: 50000
 # indices.memory.index_buffer_size: 50%
