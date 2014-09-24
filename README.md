@@ -75,6 +75,7 @@ This role works best with a few pre and post tasks as well as some cluster healt
 
         - name: Enable shard allocation for the cluster
           uri: url=http://localhost:{{ es_http_port }}/_cluster/settings method=PUT body='{{ uribody_false }}'
+          delay: 3
           tags: [ "elasticsearch" , "esconfig" ]
 
         - name: Wait for cluster health to recover
