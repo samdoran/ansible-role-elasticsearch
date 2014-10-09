@@ -22,3 +22,11 @@ es_java_opts_xss: 256k
 
 es_update_plugins: false
 es_disable_swap: true
+
+# ES Plugins
+es_plugins:
+  - name: HQ
+    install: "royrusso/elasticsearch-HQ"
+
+  - name: head
+    install: "mobz/elasticsearch-head"

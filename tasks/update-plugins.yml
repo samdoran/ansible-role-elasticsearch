@@ -1,32 +1,19 @@
 ---
-- name: Check for elasticsearch HQ plugin
-  stat: path=/usr/share/elasticsearch/plugins/HQ
-  register: result
+- name: Check for elasticsearch plugin
+  stat: path=/usr/share/elasticsearch/plugins/{{ item.name }}
+  with_items: es_plugins
+  register: plugincheck
+  tags: [ "elasticsearch" , "esplugins", test ]
+
+- name: Remove elasticsearch plugin
+  command: ./plugin -remove {{ item.0.install }} chdir=/usr/share/elasticsearch/bin
+  when: plugincheck is defined and item.1.stat.exists == True
+  with_together:
+    - es_plugins
+    - plugincheck.results
   tags: [ "elasticsearch" , "esplugins" ]
 
-- name: Remove elasticsearch HQ plugin
-  command: ./plugin -remove royrusso/elasticsearch-HQ
-            chdir=/usr/share/elasticsearch/bin
-  when: result is defined and result.stat.exists == True
-  tags: [ "elasticsearch" , "esplugins" ]
-
-- name: Install elasticsearch HQ plugin
-  command: ./plugin -install royrusso/elasticsearch-HQ
-            chdir=/usr/share/elasticsearch/bin
-  tags: [ "elasticsearch" , "esplugins" ]
-
-- name: Check for elasticsearch head plugin
-  stat: path=/usr/share/elasticsearch/plugins/head
-  register: result
-  tags: [ "elasticsearch" , "esplugins" ]
-
-- name: Remove elasticsearch head plugin
-  command: ./plugin -remove mobz/elasticsearch-head
-            chdir=/usr/share/elasticsearch/bin
-  when: result is defined and result.stat.exists == True
-  tags: [ "elasticsearch" , "esplugins" ]
-
-- name: Install elasticsearch head plugin
-  command: ./plugin -install mobz/elasticsearch-head
-            chdir=/usr/share/elasticsearch/bin
+- name: Install elasticsearch plugin
+  command: ./plugin -install {{ item.install }} chdir=/usr/share/elasticsearch/bin
+  with_items: es_plugins
   tags: [ "elasticsearch" , "esplugins" ]
