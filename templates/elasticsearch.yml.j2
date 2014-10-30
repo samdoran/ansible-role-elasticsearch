@@ -17,7 +17,7 @@ index.number_of_replicas: {{ es_number_of_replicas }}
 
 
 # --- Memory --- #
-bootstrap.mlockall: true
+bootstrap.mlockall: {{ es_enable_mlockall }}
 
 
 # --- Network and HTTP --- #

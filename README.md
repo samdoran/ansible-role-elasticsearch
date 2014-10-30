@@ -43,6 +43,8 @@ Role Variables
 
 **es_disable_swap**       Whether or not to disable swap on the system (Default: true)
 
+**es_enable_mlockall**       Whether or not to enable locking memory (Default: 'true')
+
 **es_number_of_no_data_nodes**   How many nodes have no data, subtracted from number of nodes that need to be up for recovery (es_recovery_nodes).
 
 
