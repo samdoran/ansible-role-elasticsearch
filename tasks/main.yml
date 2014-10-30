@@ -49,7 +49,7 @@
 
 - name: Disable swap in /etc/fstab
   lineinfile: "state=present backup=yes dest=/etc/fstab regexp='^#?(.*swap.*$)' line='#\\1' backrefs=yes"
-  when: es_disable_swap
+  when: es_disable_swap == true
   notify: turn off swap
   tags: [ 'elasticsearch' , 'esconfig' ]
 
