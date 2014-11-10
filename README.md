@@ -17,6 +17,8 @@ Role Variables
 
 **es_cluster_name**    Name of the cluster (Default: elasticsearch)
 
+**es_multicast_hosts**      A comma separated list of hosts to contact for discovery -- when defined disables unicast.
+
 **es_multicast_ip**      Multicast address used for ES node discovery (Default: 224.2.2.4)
 
 **es_multicast_port**    Multicast port used for ES node discovery (Default: 54328)
