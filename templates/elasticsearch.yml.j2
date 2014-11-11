@@ -4,8 +4,8 @@ cluster.name: {{ es_cluster_name }}
 
 # --- Node --- #
 node.name: "{{ ansible_hostname }}"
-node.master: {{ es_node_master }}
-node.data: {{ es_node_data }}
+node.master: {{ es_node_master | lower }}
+node.data: {{ es_node_data | lower }}
 
 
 # --- Index --- #
@@ -18,8 +18,7 @@ indices.memory.index_buffer_size: 50%
 
 
 # --- Memory --- #
-bootstrap.mlockall: true
-
+bootstrap.mlockall: {{ es_enable_mlockall | lower }}
 
 # --- Network and HTTP --- #
 # Only listen on localhost (run behind Nginx for SSL)
@@ -32,11 +31,16 @@ gateway.recover_after_data_nodes: {{ es_recovery_nodes }}
 
 
 # --- Discovery --- #
-discovery.zen.minimum_master_nodes: {{ ((es_number_of_nodes | int) // 2) + 1 }}
+{% if es_unicast_discovery_hosts is defined %}
+discovery.zen.ping.unicast.enabled: true
+discovery.zen.ping.unicast.hosts: "{{ es_unicast_discovery_hosts }}"
+discovery.zen.ping.multicast.enabled: false
+{% else %}
 discovery.zen.ping.multicast.enabled: true
 discovery.zen.ping.multicast.group: {{ es_multicast_ip }}
 discovery.zen.ping.multicast.port: {{ es_multicast_port }}
 discovery.zen.ping.multicast.ttl: 5
+{% endif %}
 
 
 # --- Threadpool Settings --- #
