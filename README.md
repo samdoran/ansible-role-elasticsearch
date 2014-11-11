@@ -17,6 +17,8 @@ Role Variables
 
 **es_cluster_name**    Name of the cluster (Default: elasticsearch)
 
+**es_multicast_hosts**      A comma separated list of hosts to contact for discovery -- when defined disables unicast.
+
 **es_multicast_ip**      Multicast address used for ES node discovery (Default: 224.2.2.4)
 
 **es_multicast_port**    Multicast port used for ES node discovery (Default: 54328)
@@ -42,6 +44,8 @@ Role Variables
 **es_update_plugins**   Whether or not to update plugins (Default: false)
 
 **es_disable_swap**       Whether or not to disable swap on the system (Default: true)
+
+**es_enable_mlockall**       Whether or not to enable locking memory (Default: 'true')
 
 **es_number_of_no_data_nodes**   How many nodes have no data, subtracted from number of nodes that need to be up for recovery (es_recovery_nodes).
 
