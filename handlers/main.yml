@@ -7,3 +7,6 @@
 
 - name: turn off swap
   command: swapoff -a
+
+- name: turn on swap
+  command: swapon -a
