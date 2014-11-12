@@ -114,4 +114,26 @@
   notify: turn on swap
   tags: [ 'elasticsearch' , 'esconfig' , 'swap' ]
 
+- name: Add task to compress old elasticsearch logs
+  cron:
+    name="Compress elasticsearch logs"
+    state=present
+    user=root
+    cron_file=elasticsearch
+    hour=4
+    minute=10
+    job="find /var/log/elasticsearch -type f -mtime +1 -name '*.log.2*' ! -name '*.gz' -exec gzip '{}' ';'"
+  tags: [ 'elasticsearch' , 'escron' ]
+
+- name: Add task to delete old elasticsearch logs
+  cron:
+    name="Delete elasticsearch logs"
+    state=present
+    user=root
+    cron_file=elasticsearch
+    hour=4
+    minute=00
+    job="find /var/log/elasticsearch -type f -mtime +10 -name '*.gz' -exec rm '{}' ';'"
+  tags: [ 'elasticsearch' , 'escron' ]
+
 - { include: update-plugins.yml, when: es_update_plugins or es_install_status.changed }
