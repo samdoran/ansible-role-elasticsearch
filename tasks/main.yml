@@ -100,7 +100,7 @@
     backrefs=yes
   when: es_disable_swap | bool
   notify: turn off swap
-  tags: [ 'elasticsearch' , 'esconfig' , 'swap' ]
+  tags: [ 'elasticsearch' , 'esconfig' , 'esswap' ]
 
 - name: Enable swap in /etc/fstab
   lineinfile:
@@ -112,7 +112,7 @@
     backrefs=yes
   when: not es_disable_swap | bool
   notify: turn on swap
-  tags: [ 'elasticsearch' , 'esconfig' , 'swap' ]
+  tags: [ 'elasticsearch' , 'esconfig' , 'esswap' ]
 
 - name: Add task to compress old elasticsearch logs
   cron:
