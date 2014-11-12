@@ -77,7 +77,7 @@
     state=directory
     owner=root
     group=root
-    directory_mode=755
+    mode=755
   tags: [ 'elasticsearch' , 'esconfig' ]
 
 - name: Copy elasticsearch synthetic field script
