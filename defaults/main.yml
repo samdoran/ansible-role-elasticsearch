@@ -31,3 +31,6 @@ es_plugins:
 
   - name: head
     install: "mobz/elasticsearch-head"
+
+  - name: bigdesk
+    install: "lukas-vlcek/bigdesk"
