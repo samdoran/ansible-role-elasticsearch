@@ -6,7 +6,9 @@
   tags: [ "elasticsearch" , "esplugins", test ]
 
 - name: Remove elasticsearch plugin
-  command: ./plugin -remove {{ item.0.install }} chdir=/usr/share/elasticsearch/bin
+  command:
+    ./plugin -remove {{ item.0.install }}
+    chdir=/usr/share/elasticsearch/bin
   when: plugincheck is defined and item.1.stat.exists == True
   with_together:
     - es_plugins
@@ -14,6 +16,8 @@
   tags: [ "elasticsearch" , "esplugins" ]
 
 - name: Install elasticsearch plugin
-  command: ./plugin -install {{ item.install }} chdir=/usr/share/elasticsearch/bin
+  command:
+    ./plugin -install {{ item.install }}
+    chdir=/usr/share/elasticsearch/bin
   with_items: es_plugins
   tags: [ "elasticsearch" , "esplugins" ]

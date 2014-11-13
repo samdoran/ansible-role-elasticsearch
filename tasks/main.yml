@@ -1,8 +1,6 @@
 ---
 - name: Install packages
-  yum:
-    name={{ item }}
-    state=latest
+  yum: name={{ item }} state=latest
   tags: [ "elasticsearch" , "packages" ]
   with_items:
     - java-1.7.0-openjdk
@@ -37,9 +35,7 @@
   notify: install elasticsearch gpg key
 
 - name: Install elasticsearch
-  yum:
-    name=elasticsearch
-    state=present
+  yum: name=elasticsearch state=present
   register: es_install_status
   notify: restart elasticsearch
   tags: [ "elasticsearch" , "name" ]
