@@ -1,13 +1,13 @@
 ---
-- name: Check for elasticsearch plugin
+- name: Check for elasticsearch plugins
   stat: path=/usr/share/elasticsearch/plugins/{{ item.name }}
   with_items: es_plugins
   register: plugincheck
   tags: [ "elasticsearch" , "esplugins" ]
 
-- name: Remove elasticsearch plugin
+- name: Remove elasticsearch plugins
   command:
-    ./plugin -remove {{ item.0.install }}
+    ./plugin -remove {{ item.0.name }}
     chdir=/usr/share/elasticsearch/bin
   when: plugincheck is defined and item.1.stat.exists == True
   with_together:
@@ -15,7 +15,7 @@
     - plugincheck.results
   tags: [ "elasticsearch" , "esplugins" ]
 
-- name: Install elasticsearch plugin
+- name: Install elasticsearch plugins
   command:
     ./plugin -install {{ item.install }}
     chdir=/usr/share/elasticsearch/bin
