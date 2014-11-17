@@ -3,7 +3,7 @@
   stat: path=/usr/share/elasticsearch/plugins/{{ item.name }}
   with_items: es_plugins
   register: plugincheck
-  tags: [ "elasticsearch" , "esplugins", test ]
+  tags: [ "elasticsearch" , "esplugins" ]
 
 - name: Remove elasticsearch plugin
   command:

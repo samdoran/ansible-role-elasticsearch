@@ -31,7 +31,7 @@ gateway.recover_after_data_nodes: {{ es_recovery_nodes }}
 
 
 # --- Discovery --- #
-discovery.zen.minimum_master_nodes: {{ ((es_number_of_nodes | int) // 2) + 1 }}
+discovery.zen.minimum_master_nodes: {{ es_minimum_master_nodes }}
 {% if es_unicast_discovery_hosts is defined %}
 discovery.zen.ping.unicast.enabled: true
 discovery.zen.ping.unicast.hosts: "{{ es_unicast_discovery_hosts }}"
