@@ -9,12 +9,15 @@ es_number_of_shards: 5
 es_number_of_replicas: 1
 es_group_name: "es"
 es_number_of_no_data_nodes: 0
+es_minimum_master_nodes: "{{ ((es_number_of_nodes | int) // 2) + 1 }}"
 es_heap_size: "{{ ansible_memtotal_mb // 2 }}m"
-es_number_of_nodes: "{{ groups[ es_group_name ] | length }}"
+es_number_of_nodes: "{{ groups[es_group_name] | length }}"
 es_recovery_nodes: "{{ es_number_of_nodes | int - es_number_of_no_data_nodes }}"
+es_enable_mlockall: true
+es_restart_on_config_change: true
 
-es_node_master: "true"
-es_node_data: "true"
+es_node_master: true
+es_node_data: true
 
 # ES Java Options
 es_java_opts_xmn: 128m
@@ -22,4 +25,17 @@ es_java_opts_xss: 256k
 
 es_update_plugins: false
 es_disable_swap: true
-es_enable_mlockall: "true"
+
+# ES Plugins
+es_plugins:
+  - name: HQ
+    install: "royrusso/elasticsearch-HQ"
+
+  - name: head
+    install: "mobz/elasticsearch-head"
+
+  - name: bigdesk
+    install: "lukas-vlcek/bigdesk"
+
+  - name: whatson
+    install: "xyu/elasticsearch-whatson/0.1.3"

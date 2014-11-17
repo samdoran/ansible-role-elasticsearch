@@ -49,11 +49,13 @@ Role Variables
 
 **es_number_of_no_data_nodes**   How many nodes have no data, subtracted from number of nodes that need to be up for recovery (es_recovery_nodes).
 
+**es_restart_on_config_change** Only fire the `restart elasticsearch` handler if this is True. Allows updating the config without restarting the node for changing values like `minimum_master_nodes`. (Default: True)
+
 
 Example Playbook
 ------------
 This role works best with a few pre and post tasks as well as some cluster health checking logic
-
+```yaml
     - name: Configure Elasticsearch nodes
       hosts: es
       sudo: yes
@@ -79,6 +81,7 @@ This role works best with a few pre and post tasks as well as some cluster healt
 
         - name: Enable shard allocation for the cluster
           uri: url=http://localhost:{{ es_http_port }}/_cluster/settings method=PUT body='{{ uribody_false }}'
+          delay: 3
           tags: [ "elasticsearch" , "esconfig" ]
 
         - name: Wait for cluster health to recover
@@ -88,7 +91,14 @@ This role works best with a few pre and post tasks as well as some cluster healt
           retries: 5
           delay: 120
           tags:     [ "elasticsearch" , "esconfig" ]
+```
 
+You can also make `es_unicast_discovery_hosts` dynamic using the following:
+
+    es_unicast_discovery_hosts:
+    "{% for host in groups[es_group_name] %}
+      {%- if host != ansible_fqdn %}{{ host }},{% endif %}
+    {%- endfor %}"
 
 License
 -------

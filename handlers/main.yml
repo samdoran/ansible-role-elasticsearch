@@ -1,9 +1,13 @@
 ---
 - name: restart elasticsearch
   service: name=elasticsearch state=restarted sleep=15
+  when: es_restart_on_config_change
 
 - name: install elasticsearch gpg key
   rpm_key: key=/etc/pki/rpm-gpg/GPG-KEY-elasticsearch state=present
 
 - name: turn off swap
   command: swapoff -a
+
+- name: turn on swap
+  command: swapon -a
