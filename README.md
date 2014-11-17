@@ -53,7 +53,7 @@ Role Variables
 Example Playbook
 ------------
 This role works best with a few pre and post tasks as well as some cluster health checking logic
-
+```yaml
     - name: Configure Elasticsearch nodes
       hosts: es
       sudo: yes
@@ -89,7 +89,7 @@ This role works best with a few pre and post tasks as well as some cluster healt
           retries: 5
           delay: 120
           tags:     [ "elasticsearch" , "esconfig" ]
-
+```
 
 License
 -------
