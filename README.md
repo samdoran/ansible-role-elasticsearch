@@ -93,6 +93,13 @@ This role works best with a few pre and post tasks as well as some cluster healt
           tags:     [ "elasticsearch" , "esconfig" ]
 ```
 
+You can also make `es_unicast_discovery_hosts` dynamic using the following:
+
+    es_unicast_discovery_hosts:
+    "{% for host in groups[es_group_name] %}
+      {%- if host != ansible_fqdn %}{{ host }},{% endif %}
+    {%- endfor %}"
+
 License
 -------
 
