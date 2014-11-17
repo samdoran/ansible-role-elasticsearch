@@ -14,6 +14,7 @@ es_heap_size: "{{ ansible_memtotal_mb // 2 }}m"
 es_number_of_nodes: "{{ groups[es_group_name] | length }}"
 es_recovery_nodes: "{{ es_number_of_nodes | int - es_number_of_no_data_nodes }}"
 es_enable_mlockall: true
+es_restart_on_config_change: true
 
 es_node_master: true
 es_node_data: true

@@ -49,6 +49,8 @@ Role Variables
 
 **es_number_of_no_data_nodes**   How many nodes have no data, subtracted from number of nodes that need to be up for recovery (es_recovery_nodes).
 
+**es_restart_on_config_change** Only fire the `restart elasticsearch` handler if this is True. Allows updating the config without restarting the node for changing values like `minimum_master_nodes`. (Default: True)
+
 
 Example Playbook
 ------------
