@@ -36,3 +36,6 @@ es_plugins:
 
   - name: bigdesk
     install: "lukas-vlcek/bigdesk"
+
+  - name: whatson
+    install: "xyu/elasticsearch-whatson/0.1.3"
