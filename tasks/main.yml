@@ -40,13 +40,6 @@
   notify: restart elasticsearch
   tags: [ "elasticsearch" , "name" ]
 
-- name: Start and enable elasticsearch
-  service:
-    name=elasticsearch
-    enabled=yes
-    state=started
-  tags: [ "elasticsearch" , "name" ]
-
 - name: Copy main elasticsearch config
   template:
     src=elasticsearch.yml.j2
@@ -56,6 +49,13 @@
     mode=0644
   tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
+
+- name: Start and enable elasticsearch
+  service:
+    name=elasticsearch
+    enabled=yes
+    state=started
+  tags: [ "elasticsearch" , "name" ]
 
 - name: Copy elasticsearch system config
   template:
