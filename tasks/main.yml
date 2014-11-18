@@ -137,10 +137,6 @@
   register: es_settings
   tags: [ 'elasticsearch' , 'esmm' ]
 
-- name: Show value of es_settings
-  debug: var=es_settings
-  tags: [ 'elasticsearch' , 'esmm' ]
-
 - name: Update discovery.zen.minimum_master_nodes
   uri: >
     url=http://localhost:{{ es_http_port }}/_cluster/settings
