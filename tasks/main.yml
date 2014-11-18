@@ -143,8 +143,9 @@
     method=PUT
     body='{"persistent" : {"discovery.zen.minimum_master_nodes": "{{ es_minimum_master_nodes }}"}}'
   when: >
-    es_settings.json.persistent.discovery.zen.minimum_master_nodes != es_minimum_master_nodes
-    or es_settings.json.persistent.discovery.zen.minimum_master_nodes is not defined
+    ( es_settings.json.persistent.discovery is not defined
+    or es_settings.json.persistent.discovery.zen.minimum_master_nodes is not defined )
+    or es_settings.json.persistent.discovery.zen.minimum_master_nodes != es_minimum_master_nodes
   tags: [ 'elasticsearch' , 'esmm' ]
 
 - { include: update-plugins.yml, when: es_update_plugins or es_install_status.changed }
