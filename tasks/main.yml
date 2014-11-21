@@ -67,6 +67,16 @@
   tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
 
+- name: Copy elasticsearch nginx config
+  template:
+    src=etc-nginx-conf.d-elasticsearch.j2
+    dest=/etc/nginx/conf.d/elasticsearch.conf
+    owner=root
+    group=root
+    mode=0644
+  tags: [ "elasticsearch" , "esconfig" , "nginx" , "nginxconfig" ]
+  notify: reload nginx
+
 - name: Create /etc/elasticsearch/scripts
   file:
     path=/etc/elasticsearch/scripts
@@ -132,19 +142,24 @@
     job="find /var/log/elasticsearch -type f -mtime +10 -name '*.gz' -exec rm '{}' ';'"
   tags: [ 'elasticsearch' , 'escron' ]
 
+- name: Wait for elasticsearch HTTP port
+  wait_for: port={{ es_http_port + 1 }}
+  tags: [ 'elasticsearch' , 'esmm' ]
+
 - name: Get current value of discovery.zen.minimum_master_nodes
-  uri: url=http://localhost:{{ es_http_port }}/_cluster/settings method=GET
+  uri: url=http://localhost:{{ es_http_port + 1 }}/_cluster/settings method=GET
   register: es_settings
   tags: [ 'elasticsearch' , 'esmm' ]
 
 - name: Update discovery.zen.minimum_master_nodes
   uri: >
-    url=http://localhost:{{ es_http_port }}/_cluster/settings
+    url=http://localhost:{{ es_http_port + 1 }}/_cluster/settings
     method=PUT
     body='{"persistent" : {"discovery.zen.minimum_master_nodes": "{{ es_minimum_master_nodes }}"}}'
   when: >
-    ( es_settings.json.persistent.discovery is not defined
-    or es_settings.json.persistent.discovery.zen.minimum_master_nodes is not defined )
+    es_settings.json.persistent is not defined
+    or es_settings.json.persistent.discovery is not defined
+    or es_settings.json.persistent.discovery.zen.minimum_master_nodes is not defined
     or es_settings.json.persistent.discovery.zen.minimum_master_nodes != es_minimum_master_nodes
   tags: [ 'elasticsearch' , 'esmm' ]
 
