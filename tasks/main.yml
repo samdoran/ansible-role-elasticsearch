@@ -5,6 +5,19 @@
   with_items:
     - java-1.7.0-openjdk
 
+- name: Set es_http_proxy_port
+  set_fact:
+    es_http_proxy_port="{{ es_http_port + 1 }}"
+  when: es_ssl_proxy
+  tags: [ 'elasticsearch' , 'esmm' , 'esconfig' ]
+
+- name: Get current HTTP port
+  shell: >
+    grep http.port /etc/elasticsearch/elasticsearch.yml | cut -d ' ' -f 2
+  register: current_es_http_port
+  changed_when: False
+  tags: [ 'elasticsearch' , 'esmm'  ]
+
 - name: Remove old repos
   file:
     path=/etc/yum.repos.d/elasticsearch-1.{{ item }}.repo
@@ -75,6 +88,15 @@
     group=root
     mode=0644
   tags: [ "elasticsearch" , "esconfig" , "nginx" , "nginxconfig" ]
+  when: es_ssl_proxy
+  notify: reload nginx
+
+- name: Remove elasticsearch nginx config
+  file:
+    path=/etc/nginx/conf.d/elasticsearch.conf
+    state=absent
+  tags: [ "elasticsearch" , "esconfig" , "nginx" , "nginxconfig" ]
+  when: not es_ssl_proxy
   notify: reload nginx
 
 - name: Create /etc/elasticsearch/scripts
@@ -142,18 +164,25 @@
     job="find /var/log/elasticsearch -type f -mtime +10 -name '*.gz' -exec rm '{}' ';'"
   tags: [ 'elasticsearch' , 'escron' ]
 
+# This extra restart is necessary to prevent the check following tasks from
+# failing because they will be looking at the wrong port.
+- name: Restart elasticsearch if new HTTP port is different
+  service: name=elasticsearch state=restarted
+  when: es_http_proxy_port != current_es_http_port.stdout
+  tags: [ 'elasticsearch' , 'esmm' ]
+
 - name: Wait for elasticsearch HTTP port
-  wait_for: port={{ es_http_port + 1 }}
+  wait_for: port={{ es_http_proxy_port }}
   tags: [ 'elasticsearch' , 'esmm' ]
 
 - name: Get current value of discovery.zen.minimum_master_nodes
-  uri: url=http://localhost:{{ es_http_port + 1 }}/_cluster/settings method=GET
+  uri: url=http://localhost:{{ es_http_proxy_port }}/_cluster/settings method=GET
   register: es_settings
   tags: [ 'elasticsearch' , 'esmm' ]
 
 - name: Update discovery.zen.minimum_master_nodes
   uri: >
-    url=http://localhost:{{ es_http_port + 1 }}/_cluster/settings
+    url=http://localhost:{{ es_http_proxy_port }}/_cluster/settings
     method=PUT
     body='{"persistent" : {"discovery.zen.minimum_master_nodes": "{{ es_minimum_master_nodes }}"}}'
   when: >
