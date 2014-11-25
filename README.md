@@ -11,6 +11,8 @@ java 1.7.0_55 or 1.8.0_5
 Role Variables
 --------------
 
+**es_ssl_proxy**  Whether to proxy elasticsearch through SSL. Requires nginx role. (Default: False)
+
 **es_http_port**       HTTP port (Default: 9200)
 
 **es_transport_port**  Node to node communication port (Default: 9300)
