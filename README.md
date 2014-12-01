@@ -11,17 +11,21 @@ java 1.7.0_55 or 1.8.0_5
 Role Variables
 --------------
 
-**es_http_port**       HTTP port (Default: 9200)
+**es_ssl_proxy**          Whether to proxy elasticsearch through SSL. Requires nginx role. (Default: False)
 
-**es_transport_port**  Node to node communication port (Default: 9300)
+**es_http_port**          HTTP port (Default: 9200)
 
-**es_cluster_name**    Name of the cluster (Default: elasticsearch)
+**es_http_proxy_port**    ES HTTP port when using a proxy server. This will be the port in `elasticsearch.yml`. (Default: es_http_port)
 
-**es_multicast_hosts**      A comma separated list of hosts to contact for discovery -- when defined disables unicast.
+**es_transport_port**     Node to node communication port (Default: 9300)
 
 **es_multicast_ip**      Multicast address used for ES node discovery (Default: 224.2.2.4)
 
 **es_multicast_port**    Multicast port used for ES node discovery (Default: 54328)
+
+**es_cluster_name**       Name of the cluster (Default: elasticsearch)
+
+**es_unicast_discovery_hosts**    A comma separated list of hosts to contact for discovery -- when defined disables unicast. (Default: undefined)
 
 **es_cluster_name**     Name of elasticsearch cluster (Default: elasticsearch)
 
