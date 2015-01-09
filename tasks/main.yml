@@ -9,7 +9,7 @@
   set_fact:
     es_http_proxy_port="{{ es_http_port + 1 }}"
   when: es_ssl_proxy
-  tags: [ 'elasticsearch' , 'esmm' , 'esconfig' , 'nginx' , 'nginxconfig' ]
+  tags: [ 'elasticsearch' , 'esmm' , 'esconfig' , 'nginx' , 'nginxconfig' , 'kibana' , 'kibanaconfig' ]
 
 - name: Get current HTTP port
   shell: >
