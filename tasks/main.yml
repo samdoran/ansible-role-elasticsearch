@@ -9,7 +9,7 @@
   set_fact:
     es_http_proxy_port="{{ es_http_port + 1 }}"
   when: es_ssl_proxy
-  tags: [ 'elasticsearch' , 'esmm' , 'esconfig' ]
+  tags: [ 'elasticsearch' , 'esmm' , 'esconfig' , 'nginx' , 'nginxconfig' , 'kibana' , 'kibanaconfig' ]
 
 - name: Get current HTTP port
   shell: >
@@ -177,6 +177,9 @@
 
 - name: Get current value of discovery.zen.minimum_master_nodes
   uri: url=http://localhost:{{ es_http_proxy_port }}/_cluster/settings method=GET
+  until: es_settings.status == 200
+  retries: 20
+  delay: 30
   register: es_settings
   tags: [ 'elasticsearch' , 'esmm' ]
 
