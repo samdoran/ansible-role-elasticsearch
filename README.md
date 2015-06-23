@@ -15,7 +15,7 @@ Role Variables
 
 **es_http_port**          HTTP port (Default: 9200)
 
-**es_http_proxy_port**    ES HTTP port when using a proxy server. This will be the port in `elasticsearch.yml`. (Default: es_http_port)
+**es_http_listen_port**    ES HTTP port when using a proxy server. This will be the port in `elasticsearch.yml`. (Default: es_http_port)
 
 **es_transport_port**     Node to node communication port (Default: 9300)
 

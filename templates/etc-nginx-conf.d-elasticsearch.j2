@@ -21,11 +21,11 @@ server {
     deny all;
     {% endif %}
     # Pass requests to ElasticSearch
-    proxy_pass http://127.0.0.1:{{ es_http_proxy_port }};
+    proxy_pass http://127.0.0.1:{{ es_http_listen_port }};
   }
 
   location / {
     # Pass requests to ElasticSearch
-    proxy_pass http://127.0.0.1:{{ es_http_proxy_port }};
+    proxy_pass http://127.0.0.1:{{ es_http_listen_port }};
   }
 }

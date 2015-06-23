@@ -5,9 +5,9 @@
   with_items:
     - java-1.7.0-openjdk
 
-- name: Set es_http_proxy_port
+- name: Set es_http_listen_port
   set_fact:
-    es_http_proxy_port="{{ es_http_port + 1 }}"
+    es_http_listen_port="{{ es_http_port + 1 }}"
   when: es_ssl_proxy
   tags: [ 'elasticsearch' , 'esmm' , 'esconfig' , 'nginx' , 'nginxconfig' , 'kibana' , 'kibanaconfig' ]
 
@@ -168,15 +168,15 @@
 # failing because they will be looking at the wrong port.
 - name: Restart elasticsearch if new HTTP port is different
   service: name=elasticsearch state=restarted
-  when: es_http_proxy_port != current_es_http_port.stdout
+  when: es_http_listen_port != current_es_http_port.stdout
   tags: [ 'elasticsearch' , 'esmm' ]
 
 - name: Wait for elasticsearch HTTP port
-  wait_for: port={{ es_http_proxy_port }}
+  wait_for: port={{ es_http_listen_port }}
   tags: [ 'elasticsearch' , 'esmm' ]
 
 - name: Get current value of discovery.zen.minimum_master_nodes
-  uri: url=http://localhost:{{ es_http_proxy_port }}/_cluster/settings method=GET
+  uri: url=http://localhost:{{ es_http_listen_port }}/_cluster/settings method=GET
   until: es_settings.status == 200
   retries: 20
   delay: 30
@@ -185,7 +185,7 @@
 
 - name: Update discovery.zen.minimum_master_nodes
   uri: >
-    url=http://localhost:{{ es_http_proxy_port }}/_cluster/settings
+    url=http://localhost:{{ es_http_listen_port }}/_cluster/settings
     method=PUT
     body='{"persistent" : {"discovery.zen.minimum_master_nodes": "{{ es_minimum_master_nodes }}"}}'
   when: >
