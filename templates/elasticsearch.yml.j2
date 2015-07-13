@@ -25,6 +25,7 @@ bootstrap.mlockall: {{ es_enable_mlockall | lower }}
 # Only listen on localhost (run behind Nginx for SSL)
 transport.tcp.port: {{ es_transport_port }}
 http.port: {{ es_http_listen_port }}
+http.max_content_length: {{ es_http_max_content_length }}
 
 
 # --- Gateway --- #
