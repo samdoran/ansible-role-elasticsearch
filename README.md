@@ -6,7 +6,7 @@ Install elasticsearch. Heap size is dynamically calculated based on total system
 Requirements
 ------------
 
-java 1.7.x or 1.8.x
+`es_http_listen_port` open in firewall on host
 
 Role Variables
 --------------
