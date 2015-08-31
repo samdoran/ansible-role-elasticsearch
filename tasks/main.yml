@@ -20,8 +20,8 @@
 
 - name: Remove old repos
   file:
-    path=/etc/yum.repos.d/elasticsearch-1.{{ item }}.repo
-    state=absent
+    path: /etc/yum.repos.d/elasticsearch-1.{{ item }}.repo
+    state: absent
   with_sequence:
     start=1
     end=2
@@ -30,20 +30,20 @@
 
 - name: Install elasticsearch repo
   copy:
-    src=elasticsearch-1.3.repo
-    dest=/etc/yum.repos.d/elasticsearch-1.3.repo
-    owner=root
-    group=root
-    mode=0644
+    src: elasticsearch-1.3.repo
+    dest: /etc/yum.repos.d/elasticsearch-1.3.repo
+    owner: root
+    group: root
+    mode: 0644
   tags: [ "elasticsearch" , "yum" ]
 
 - name: Copy Elasticsearch GPG key
   copy:
-    src=GPG-KEY-elasticsearch
-    dest=/etc/pki/rpm-gpg/GPG-KEY-elasticsearch
-    owner=root
-    group=root
-    mode=0644
+    src: GPG-KEY-elasticsearch
+    dest: /etc/pki/rpm-gpg/GPG-KEY-elasticsearch
+    owner: root
+    group: root
+    mode: 0644
   tags: [ "elasticsearch" , "yum" ]
   notify: install elasticsearch gpg key
 
@@ -55,113 +55,113 @@
 
 - name: Copy main elasticsearch config
   template:
-    src=elasticsearch.yml.j2
-    dest=/etc/elasticsearch/elasticsearch.yml
-    owner=root
-    group=root
-    mode=0644
+    src: elasticsearch.yml.j2
+    dest: /etc/elasticsearch/elasticsearch.yml
+    owner: root
+    group: root
+    mode: 0644
   tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
 
 - name: Start and enable elasticsearch
   service:
-    name=elasticsearch
-    enabled=yes
-    state=started
+    name: elasticsearch
+    enabled: yes
+    state: started
   tags: [ "elasticsearch" , "name" ]
 
 - name: Copy elasticsearch system config
   template:
-    src=etc-sysconfig-elasticsearch.j2
-    dest=/etc/sysconfig/elasticsearch
-    owner=root
-    group=root
-    mode=0644
+    src: etc-sysconfig-elasticsearch.j2
+    dest: /etc/sysconfig/elasticsearch
+    owner: root
+    group: root
+    mode: 0644
   tags: [ "elasticsearch" , "esconfig" ]
   notify: restart elasticsearch
 
 - name: Copy elasticsearch nginx config
   template:
-    src=etc-nginx-conf.d-elasticsearch.j2
-    dest=/etc/nginx/conf.d/elasticsearch.conf
-    owner=root
-    group=root
-    mode=0644
+    src: etc-nginx-conf.d-elasticsearch.j2
+    dest: /etc/nginx/conf.d/elasticsearch.conf
+    owner: root
+    group: root
+    mode: 0644
   tags: [ "elasticsearch" , "esconfig" , "nginx" , "nginxconfig" ]
   when: es_ssl_proxy
   notify: reload nginx
 
 - name: Remove elasticsearch nginx config
   file:
-    path=/etc/nginx/conf.d/elasticsearch.conf
-    state=absent
+    path: /etc/nginx/conf.d/elasticsearch.conf
+    state: absent
   tags: [ "elasticsearch" , "esconfig" , "nginx" , "nginxconfig" ]
   when: not es_ssl_proxy
   notify: reload nginx
 
 - name: Create /etc/elasticsearch/scripts
   file:
-    path=/etc/elasticsearch/scripts
-    state=directory
-    owner=root
-    group=root
-    mode=755
+    path: /etc/elasticsearch/scripts
+    state: directory
+    owner: root
+    group: root
+    mode: 0755
   tags: [ 'elasticsearch' , 'esconfig' ]
 
 - name: Copy elasticsearch synthetic field script
   copy:
-    src=kibana
-    dest=/etc/elasticsearch/scripts
-    owner=root
-    group=root
-    mode=0644
-    directory_mode=755
+    src: kibana
+    dest: /etc/elasticsearch/scripts
+    owner: root
+    group: root
+    mode: 0644
+    directory_mode: 0755
   tags: [ 'elasticsearch' , 'esconfig' ]
 
 - name: Disable swap in /etc/fstab
   lineinfile:
-    state=present
-    backup=yes
-    dest=/etc/fstab
-    regexp='^#?(.*swap.*$)'
-    line='#\1'
-    backrefs=yes
+    state: present
+    backup: yes
+    dest: /etc/fstab
+    regexp: '^#?(.*swap.*$)'
+    line: '#\1'
+    backrefs: yes
   when: es_disable_swap | bool
   notify: turn off swap
   tags: [ 'elasticsearch' , 'esconfig' , 'esswap' ]
 
 - name: Enable swap in /etc/fstab
   lineinfile:
-    state=present
-    backup=yes
-    dest=/etc/fstab
-    regexp='^#+(.*swap.*$)'
-    line='\1'
-    backrefs=yes
+    state: present
+    backup: yes
+    dest: /etc/fstab
+    regexp: '^#+(.*swap.*$)'
+    line: '\1'
+    backrefs: yes
   when: not es_disable_swap | bool
   notify: turn on swap
   tags: [ 'elasticsearch' , 'esconfig' , 'esswap' ]
 
 - name: Add task to compress old elasticsearch logs
   cron:
-    name="Compress elasticsearch logs"
-    state=present
-    user=root
-    cron_file=elasticsearch
-    hour=4
-    minute=10
-    job="find /var/log/elasticsearch -type f -mtime +1 -name '*.log.2*' ! -name '*.gz' -exec gzip '{}' ';'"
+    name: "Compress elasticsearch logs"
+    state: present
+    user: root
+    cron_file: elasticsearch
+    hour: 4
+    minute: 10
+    job: "find /var/log/elasticsearch -type f -mtime +1 -name '*.log.2*' ! -name '*.gz' -exec gzip '{}' ';'"
   tags: [ 'elasticsearch' , 'escron' ]
 
 - name: Add task to delete old elasticsearch logs
   cron:
-    name="Delete elasticsearch logs"
-    state=present
-    user=root
-    cron_file=elasticsearch
-    hour=4
-    minute=00
-    job="find /var/log/elasticsearch -type f -mtime +10 -name '*.gz' -exec rm '{}' ';'"
+    name: "Delete elasticsearch logs"
+    state: present
+    user: root
+    cron_file: elasticsearch
+    hour: 4
+    minute: 00
+    job: "find /var/log/elasticsearch -type f -mtime +10 -name '*.gz' -exec rm '{}' ';'"
   tags: [ 'elasticsearch' , 'escron' ]
 
 # This extra restart is necessary to prevent the check following tasks from
