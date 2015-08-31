@@ -3,7 +3,7 @@
   yum: name={{ item }} state=latest
   tags: [ "elasticsearch" , "packages" ]
   with_items:
-    - java-1.7.0-openjdk
+    - java-1.8.0-openjdk
 
 - name: Set es_http_listen_port
   set_fact:
