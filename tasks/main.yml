@@ -181,6 +181,8 @@
   retries: 20
   delay: 30
   register: es_settings
+  ignore_errors: True
+  when: es_install_status.changed
   tags: [ 'elasticsearch' , 'esmm' ]
 
 - name: Update discovery.zen.minimum_master_nodes
@@ -189,10 +191,13 @@
     method=PUT
     body='{"persistent" : {"discovery.zen.minimum_master_nodes": "{{ es_minimum_master_nodes }}"}}'
   when: >
-    es_settings.json.persistent is not defined
+    es_settings is defined
+    and (es_install_status.changed
+    or es_settings.json.persistent is not defined
     or es_settings.json.persistent.discovery is not defined
     or es_settings.json.persistent.discovery.zen.minimum_master_nodes is not defined
-    or es_settings.json.persistent.discovery.zen.minimum_master_nodes != es_minimum_master_nodes
+    or es_settings.json.persistent.discovery.zen.minimum_master_nodes != es_minimum_master_nodes)
   tags: [ 'elasticsearch' , 'esmm' ]
 
-- { include: update-plugins.yml, when: es_update_plugins or es_install_status.changed }
+- include: update-plugins.yml
+  when: es_update_plugins or es_install_status.changed
