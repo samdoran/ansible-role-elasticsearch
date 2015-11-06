@@ -12,6 +12,8 @@ server {
   proxy_set_header  X-Forwarded-For $proxy_add_x_forwarded_for;
   proxy_set_header  Host $http_host;
 
+  client_max_body_size {{ es_http_max_content_length }}M;
+
   location ~* _cluster {
     # Control access to Cluster API
     {% if es_allow_cluster_nets is defined %}

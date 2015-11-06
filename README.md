@@ -16,6 +16,7 @@ Role Variables
 | `es_ssl_proxy`    | False    | Whether to proxy elasticsearch through SSL. Requires nginx role.   |
 | `es_http_port`    | 9200    | HTTP port   |
 | `es_http_listen_port`    | es_http_port    | ES HTTP port when using a proxy server. This will be the port in `elasticsearch.yml`.   |
+| `es_http_max_content_length` | 100 | Max HTTP put size used in Elasticsearch nginx proxy config and `elasticsearch.yml` |
 | `es_transport_port`    | 9300    | Node to node communication port   |
 | `es_multicast_ip`    | 224.2.2.4    | Multicast address used for ES node discovery   |
 | `es_multicast_port`    | 54328    | Multicast port used for ES node discovery   |
