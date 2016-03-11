@@ -168,7 +168,7 @@
 # failing because they will be looking at the wrong port.
 - name: Restart elasticsearch if new HTTP port is different
   service: name=elasticsearch state=restarted
-  when: es_http_listen_port != current_es_http_port.stdout
+  when: not es_install_status.changed and (es_http_listen_port != current_es_http_port.stdout)
   tags: [ 'elasticsearch' , 'esmm' ]
 
 - name: Wait for elasticsearch HTTP port
@@ -182,7 +182,7 @@
   delay: 30
   register: es_settings
   ignore_errors: True
-  when: es_install_status.changed
+  when: not es_install_status.changed
   tags: [ 'elasticsearch' , 'esmm' ]
 
 - name: Update discovery.zen.minimum_master_nodes
@@ -192,7 +192,7 @@
     body='{"persistent" : {"discovery.zen.minimum_master_nodes": "{{ es_minimum_master_nodes }}"}}'
   when: >
     es_settings is defined
-    and (es_install_status.changed
+    and (not es_install_status.changed
     or es_settings.json.persistent is not defined
     or es_settings.json.persistent.discovery is not defined
     or es_settings.json.persistent.discovery.zen.minimum_master_nodes is not defined
