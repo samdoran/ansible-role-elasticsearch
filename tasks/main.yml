@@ -68,7 +68,7 @@
 - name: Install elasticsearch
   yum:
     name: elasticsearch
-    state: present
+    state: latest
   register: es_install_status
   notify: restart elasticsearch
   tags:
