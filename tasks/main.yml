@@ -28,13 +28,13 @@
     - elasticsearch
     - esmm
 
-- name: Remove old repos
+- name: Remove old 1.x repos
   file:
     path: /etc/yum.repos.d/elasticsearch-1.{{ item }}.repo
     state: absent
   with_sequence:
     start=1
-    end=2
+    end=7
     stride=1
   tags:
     - elasticsearch
