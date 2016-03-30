@@ -45,7 +45,7 @@
 - name: Install elasticsearch repo
   template:
     src: elasticsearch.repo.j2
-    dest: /etc/yum.repos.d/elasticsearch-{{ es_version }}.repo
+    dest: /etc/yum.repos.d/elasticsearch.repo
     owner: root
     group: root
     mode: 0644
@@ -78,7 +78,7 @@
 - name: Copy main elasticsearch config
   template:
     src: elasticsearch.yml.j2
-    dest: /etc/elasticsearch/elasticsearch.yml
+    dest: "{{ es_conf_dir }}/elasticsearch.yml"
     owner: root
     group: root
     mode: 0644
