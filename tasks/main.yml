@@ -29,9 +29,9 @@
   tags: [ "elasticsearch" , "yum" ]
 
 - name: Install elasticsearch repo
-  copy:
-    src: elasticsearch-1.3.repo
-    dest: /etc/yum.repos.d/elasticsearch-1.3.repo
+  template:
+    src: elasticsearch.repo.j2
+    dest: /etc/yum.repos.d/elasticsearch-{{ es_version }}.repo
     owner: root
     group: root
     mode: 0644
