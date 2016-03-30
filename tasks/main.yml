@@ -1,13 +1,11 @@
 ---
-- name: Install packages
+- name: Install Java
   yum:
-    name: "{{ item }}"
+    name: java-1.8.0-openjdk
     state: latest
   tags:
     - elasticsearch
     - packages
-  with_items:
-    - java-1.8.0-openjdk
 
 - name: Set es_http_listen_port
   set_fact:
