@@ -87,15 +87,6 @@
     - esconfig
   notify: restart elasticsearch
 
-- name: Start and enable elasticsearch
-  service:
-    name: elasticsearch
-    enabled: yes
-    state: started
-  tags:
-    - elasticsearch
-    - name
-
 - name: Copy elasticsearch system config
   template:
     src: etc-sysconfig-elasticsearch.j2
@@ -107,6 +98,15 @@
     - elasticsearch
     - esconfig
   notify: restart elasticsearch
+
+- name: Start and enable elasticsearch
+  service:
+    name: elasticsearch
+    enabled: yes
+    state: started
+  tags:
+    - elasticsearch
+    - name
 
 - name: Copy elasticsearch nginx config
   template:
