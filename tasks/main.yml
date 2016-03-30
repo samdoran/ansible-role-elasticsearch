@@ -135,29 +135,6 @@
   when: not es_ssl_proxy
   notify: reload nginx
 
-- name: Create /etc/elasticsearch/scripts
-  file:
-    path: /etc/elasticsearch/scripts
-    state: directory
-    owner: root
-    group: root
-    mode: 0755
-  tags:
-    - elasticsearch
-    - esconfig
-
-- name: Copy elasticsearch synthetic field script
-  copy:
-    src: kibana
-    dest: /etc/elasticsearch/scripts
-    owner: root
-    group: root
-    mode: 0644
-    directory_mode: 0755
-  tags:
-    - elasticsearch
-    - esconfig
-
 - name: Disable swap in /etc/fstab
   lineinfile:
     state: present
