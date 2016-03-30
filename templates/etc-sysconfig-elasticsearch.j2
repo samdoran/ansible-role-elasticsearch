@@ -1,47 +1,45 @@
-# Directory where the Elasticsearch binary distribution resides
-ES_HOME=/usr/share/elasticsearch
-
-# Heap Size (defaults to 256m min, 1g max)
+# {{ ansible_managed }}
+################################
+# Elasticsearch
+################################
+ES_HOME={{ es_home }}
+{% if es_major_version == 1 %}
+CONF_FILE={{ es_conf_dir }}/elasticsearch.yml
+{% endif %}
+CONF_DIR={{ es_conf_dir }}
+DATA_DIR={{ es_data_dir }}
+WORK_DIR={{ es_work_dir }}
+LOG_DIR={{ es_log_dir }}
+{% if es_major_version >=2 %}
+PID_DIR={{ es_pid_dir }}
+{% endif %}
 ES_HEAP_SIZE={{ es_heap_size }}
+{% if es_head_newsize is defined %}
+ES_HEAP_NEWSIZE={{ es_heap_newsize }}
+{% endif %}
+{% if es_direct_size is defined %}
+ES_DIRECT_SIZE= {{ es_direct_size }}
+{% endif %}
+{% if es_java_opts is defined %}
+ES_JAVA_OPTS="{{ es_java_opts }}"
+{% endif %}
+{% if es_major_version >= 2 %}ES_{% endif %}RESTART_ON_UPGRADE={{ es_restart_on_upgrade | lower }}
+{% if es_major_version >=2 %}
+ES_GC_LOG_FILE={{ es_gc_log_file }}
+{% endif %}
 
-# Heap new generation
-#ES_HEAP_NEWSIZE=
+################################
+# Elasticsearch service
+################################
+ES_USER={{ es_user }}
+ES_GROUP={{ es_group }}
+{% if es_major_version | int >= 2 and ansible_os_family == "RedHat" and ansible_distribution_major_version | int >= 7 %}
+ES_STARTUP_SLEEP_TIME={{ es_startup_sleep_time }}
+{% endif %}
 
-# max direct memory
-#ES_DIRECT_SIZE=
-
-# Additional Java OPTS
-#ES_JAVA_OPTS="-Xms{{ ansible_memtotal_mb // 2 }}m -Xmx{{ (ansible_memtotal_mb * 0.75) | int }}m -Xmn{{ es_java_opts_xmn }} -Xss{{ es_java_opts_xss }} -XX:MaxPermSize=128m"
-ES_JAVA_OPTS="-XX:NativeMemoryTracking=summary"
-
-# Maximum number of open files
-MAX_OPEN_FILES=65535
-
-# Maximum amount of locked memory
-MAX_LOCKED_MEMORY={{ ansible_memtotal_mb }}
-
-# Maximum number of VMA (Virtual Memory Areas) a process can own
-MAX_MAP_COUNT=262144
-
-# Elasticsearch log directory
-LOG_DIR=/var/log/elasticsearch
-
-# Elasticsearch data directory
-DATA_DIR=/var/lib/elasticsearch
-
-# Elasticsearch work directory
-WORK_DIR=/tmp/elasticsearch
-
-# Elasticsearch conf directory
-CONF_DIR=/etc/elasticsearch
-
-# Elasticsearch configuration file (elasticsearch.yml)
-CONF_FILE=/etc/elasticsearch/elasticsearch.yml
-
-# User to run as, change this to a specific elasticsearch user if possible
-# Also make sure, this user can write into the log directories in case you change them
-# This setting only works for the init script, but has to be configured separately for systemd startup
-ES_USER=elasticsearch
-
-# Configure restart on package upgrade (true, every other setting will lead to not restarting)
-#RESTART_ON_UPGRADE=true
+################################
+# System properties
+################################
+MAX_OPEN_FILES={{ es_max_open_files }}
+MAX_LOCKED_MEMORY={{ es_max_locked_memory }}
+MAX_MAP_COUNT={{ es_max_map_count }}
