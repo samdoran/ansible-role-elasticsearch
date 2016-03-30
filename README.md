@@ -13,6 +13,7 @@ Role Variables
 
 |   Name       | Default Value | Description                    |
 |--------------|---------------|--------------------------------|
+| `es_version` | `1.7` | Version of Elasticsearch to install. |
 | `es_ssl_proxy`    | False    | Whether to proxy elasticsearch through SSL. Requires nginx role.   |
 | `es_http_port`    | 9200    | HTTP port   |
 | `es_http_listen_port`    | es_http_port    | ES HTTP port when using a proxy server. This will be the port in `elasticsearch.yml`.   |
