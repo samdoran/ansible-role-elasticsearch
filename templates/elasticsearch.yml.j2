@@ -18,7 +18,9 @@ indices.memory.index_buffer_size: 50%
 
 
 # --- Memory --- #
+{% if es_enable_mlockall %}
 bootstrap.mlockall: {{ es_enable_mlockall | lower }}
+{% endif %}
 
 
 # --- Network and HTTP --- #
