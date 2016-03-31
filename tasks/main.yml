@@ -195,7 +195,7 @@
   service:
     name: elasticsearch
     state: restarted
-  when: not es_install_status.changed and (es_http_listen_port != current_es_http_port.stdout)
+  when: es_http_listen_port != current_es_http_port.stdout
   tags:
     - elasticsearch
     - esmm
