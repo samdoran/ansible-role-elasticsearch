@@ -9,13 +9,13 @@
     - esplugins
 
 - name: Remove elasticsearch plugins
-  command: /plugin -remove {{ item.0.name }}
+  command: ./plugin -remove {{ item.0.name }}
   args:
     chdir: /usr/share/elasticsearch/bin
   when: plugincheck is defined and item.1.stat.exists == True
   with_together:
-    - es_plugins
-    - plugincheck.results
+    - "{{ es_plugins }}"
+    - "{{ plugincheck.results }}"
   tags:
     - elasticsearch
     - esplugins
