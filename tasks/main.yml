@@ -5,7 +5,7 @@
     state: latest
   tags:
     - elasticsearch
-    - packages
+    - es-packages
 
 - name: Set es_http_listen_port
   set_fact:
@@ -13,12 +13,11 @@
   when: es_ssl_proxy
   tags:
     - elasticsearch
-    - esmm
-    - esconfig
-    - nginx
-    - nginxconfig
-    - kibana
-    - kibanaconfig
+    - es-config
+    - es-nginx
+    - es-nginxconfig
+    - es-kibana
+    - es-kibanaconfig
 
 - name: Get current HTTP port
   shell: "grep http.port {{ es_conf_dir }}/elasticsearch.yml | cut -d ' ' -f 2"
@@ -26,7 +25,6 @@
   changed_when: False
   tags:
     - elasticsearch
-    - esmm
 
 - name: Remove old 1.x repos
   file:
@@ -38,7 +36,7 @@
     stride=1
   tags:
     - elasticsearch
-    - yum
+    - es-yum
 
 - name: Install elasticsearch repo
   template:
@@ -49,7 +47,7 @@
     mode: 0644
   tags:
     - elasticsearch
-    - yum
+    - es-yum
 
 - name: Copy Elasticsearch GPG key
   copy:
@@ -60,7 +58,7 @@
     mode: 0644
   tags:
     - elasticsearch
-    - yum
+    - es-yum
   notify: install elasticsearch gpg key
 
 - name: Install elasticsearch
@@ -71,7 +69,6 @@
   notify: restart elasticsearch
   tags:
     - elasticsearch
-    - name
 
 - name: Copy main elasticsearch config
   template:
@@ -82,7 +79,7 @@
     mode: 0644
   tags:
     - elasticsearch
-    - esconfig
+    - es-config
   notify: restart elasticsearch
 
 - name: Copy elasticsearch system config
@@ -92,10 +89,10 @@
     owner: root
     group: root
     mode: 0644
+  notify: restart elasticsearch
   tags:
     - elasticsearch
-    - esconfig
-  notify: restart elasticsearch
+    - es-config
 
 - name: Start and enable elasticsearch
   service:
@@ -115,9 +112,9 @@
     mode: 0644
   tags:
     - elasticsearch
-    - esconfig
-    - nginx
-    - nginxconfig
+    - es-config
+    - es-nginx
+    - es-nginxconfig
   when: es_ssl_proxy
   notify: reload nginx
 
@@ -127,9 +124,9 @@
     state: absent
   tags:
     - elasticsearch
-    - esconfig
-    - nginx
-    - nginxconfig
+    - es-config
+    - es-nginx
+    - es-nginxconfig
   when: not es_ssl_proxy
   notify: reload nginx
 
@@ -145,8 +142,8 @@
   notify: turn off swap
   tags:
     - elasticsearch
-    - esconfig
-    - esswap
+    - es-config
+    - es-swap
 
 - name: Enable swap in /etc/fstab
   lineinfile:
@@ -160,8 +157,8 @@
   notify: turn on swap
   tags:
     - elasticsearch
-    - esconfig
-    - esswap
+    - es-config
+    - es-swap
 
 - name: Add task to compress old elasticsearch logs
   cron:
@@ -174,7 +171,7 @@
     job: "find /var/log/elasticsearch -type f -mtime +1 -name '*.log.2*' ! -name '*.gz' -exec gzip '{}' ';'"
   tags:
     - elasticsearch
-    - escron
+    - es-cron
 
 - name: Add task to delete old elasticsearch logs
   cron:
@@ -187,7 +184,7 @@
     job: "find /var/log/elasticsearch -type f -mtime +10 -name '*.gz' -exec rm '{}' ';'"
   tags:
     - elasticsearch
-    - escron
+    - es-cron
 
 # This extra restart is necessary to prevent the check following tasks from
 # failing because they will be looking at the wrong port.
@@ -198,14 +195,12 @@
   when: es_http_listen_port != current_es_http_port.stdout
   tags:
     - elasticsearch
-    - esmm
 
 - name: Wait for elasticsearch HTTP port
   wait_for:
     port: "{{ es_http_listen_port }}"
   tags:
     - elasticsearch
-    - esmm
 
 - name: Get current value of discovery.zen.minimum_master_nodes
   uri:
@@ -219,7 +214,6 @@
   when: not es_install_status.changed
   tags:
     - elasticsearch
-    - esmm
 
 - name: Update discovery.zen.minimum_master_nodes
   uri:
@@ -236,7 +230,6 @@
     or es_settings.json.persistent.discovery.zen.minimum_master_nodes !=  es_minimum_master_nodes)
   tags:
     - elasticsearch
-    - esmm
 
 - include: update-plugins.yml
   when: es_update_plugins or es_install_status.changed

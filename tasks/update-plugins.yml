@@ -6,7 +6,7 @@
   register: plugincheck
   tags:
     - elasticsearch
-    - esplugins
+    - es-plugins
 
 - name: Remove elasticsearch plugins
   command: ./plugin -remove {{ item.0.name }}
@@ -18,7 +18,7 @@
     - "{{ plugincheck.results }}"
   tags:
     - elasticsearch
-    - esplugins
+    - es-plugins
 
 - name: Install elasticsearch plugins
   command: ./plugin -i {{ item.install }}
@@ -27,4 +27,4 @@
   with_items: "{{ es_plugins }}"
   tags:
     - elasticsearch
-    - esplugins
+    - es-plugins
