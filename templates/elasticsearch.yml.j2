@@ -1,42 +1,31 @@
-# --- Cluster --- #
+# {{ ansible_managed }}
+
+# ======================== Elasticsearch Configuration =========================
+
+# ---------------------------------- Cluster -----------------------------------
 cluster.name: {{ es_cluster_name }}
 
-
-# --- Node --- #
-node.name: "{{ ansible_hostname }}"
+# ------------------------------------ Node ------------------------------------
+node.name: "{{ es_node_name }}"
 node.master: {{ es_node_master | lower }}
 node.data: {{ es_node_data | lower }}
 
+# ----------------------------------- Paths ------------------------------------
+path.data: {{ es_path_data }}
+path.logs: {{ es_path_logs }}
 
-# --- Index --- #
-index.number_of_shards: {{ es_number_of_shards }}
-index.number_of_replicas: {{ es_number_of_replicas }}
-indicies.fielddata.cache.size: 40%
-index.refresh_interval: 3  # Boost freshness of data.
-index.translog.flush_threshold_ops: 50000
-indices.memory.index_buffer_size: 50%
-
-
-# --- Memory --- #
+# ----------------------------------- Memory -----------------------------------
 {% if es_enable_mlockall %}
 bootstrap.mlockall: {{ es_enable_mlockall | lower }}
 {% endif %}
 
-
-# --- Network and HTTP --- #
+# ---------------------------------- Network -----------------------------------
+network.host: [{% for interface in es_network_host %}"{{ interface }}"{% if not loop.last %}, {% endif %}{% endfor %}]
 transport.tcp.port: {{ es_transport_port }}
 http.port: {{ es_http_listen_port }}
 http.max_content_length: {{ es_http_max_content_length }}mb
 
-# --- Marvel Settings --- #
-marvel.agent.exporter.es.hosts: "localhost:{{ es_http_listen_port }}"
-
-
-# --- Gateway --- #
-gateway.recover_after_data_nodes: {{ es_recovery_nodes }}
-
-
-# --- Discovery --- #
+# --------------------------------- Discovery ----------------------------------
 discovery.zen.minimum_master_nodes: {{ es_minimum_master_nodes }}
 {% if es_unicast_discovery_hosts is defined %}
 discovery.zen.ping.unicast.enabled: true
@@ -49,19 +38,12 @@ discovery.zen.ping.multicast.port: {{ es_multicast_port }}
 discovery.zen.ping.multicast.ttl: 5
 {% endif %}
 
+# ---------------------------------- Gateway -----------------------------------
+gateway.recover_after_data_nodes: {{ es_recovery_nodes }}
 
-# --- Threadpool Settings --- #
-# Search pool
-threadpool.search.type: fixed
-threadpool.search.size: 20
-threadpool.search.queue_size: 100
+# ---------------------------------- Index -----------------------------------
+index.number_of_shards: {{ es_number_of_shards }}
+index.number_of_replicas: {{ es_number_of_replicas }}
 
-# Bulk pool
-threadpool.bulk.type: fixed
-threadpool.bulk.size: 60
-threadpool.bulk.queue_size: 300
-
-# Index pool
-threadpool.index.type: fixed
-threadpool.index.size: 20
-threadpool.index.queue_size: 100
+# ---------------------------------- Marvel -----------------------------------
+marvel.agent.exporter.es.hosts: "localhost:{{ es_http_listen_port }}"
