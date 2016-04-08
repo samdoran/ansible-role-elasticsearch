@@ -49,17 +49,13 @@
     - elasticsearch
     - es-yum
 
-- name: Copy Elasticsearch GPG key
-  copy:
-    src: GPG-KEY-elasticsearch
-    dest: /etc/pki/rpm-gpg/GPG-KEY-elasticsearch
-    owner: root
-    group: root
-    mode: 0644
+- name: Install Elasticsearch GPG key
+  rpm_key:
+    key: "https://packages.elastic.co/GPG-KEY-elasticsearch"
+    state: present
   tags:
     - elasticsearch
     - es-yum
-  notify: install elasticsearch gpg key
 
 - name: Install elasticsearch
   yum:
@@ -160,7 +156,7 @@
     - es-config
     - es-swap
 
-- name: Add task to compress old elasticsearch logs
+- name: Add job to compress old elasticsearch logs
   cron:
     name: "Compress elasticsearch logs"
     state: present
