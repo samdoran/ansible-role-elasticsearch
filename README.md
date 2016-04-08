@@ -30,6 +30,7 @@ Role Variables
 | `es_http_listen_port` | `{{ es_http_port }}` | ES HTTP port when using a proxy server. This will be the port in `elasticsearch.yml`. |
 | `es_disable_swap` | `True` | Whether or not to disable swap on the system.   |
 | `es_update_plugins` | `False` | Whether or not to update plugins |
+
 **Elasticsearch Sysconfig Settings**
 
 | Name              | Default Value       | Description          |
