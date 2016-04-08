@@ -1,7 +1,7 @@
 ---
 - name: Check for elasticsearch plugins
   stat:
-    path: /usr/share/elasticsearch/plugins/{{ item.name }}
+    path: "{{ es_home }}/plugins/{{ item.name }}"
   with_items: "{{ es_plugins }}"
   register: plugincheck
   tags:
@@ -9,7 +9,7 @@
     - es-plugins
 
 - name: Remove elasticsearch plugins
-  command: ./plugin -remove {{ item.0.name }}
+  command: ./plugin {{ es_plugin_remove_command }} {{ item.0.name }}
   args:
     chdir: /usr/share/elasticsearch/bin
   when: plugincheck is defined and item.1.stat.exists == True
@@ -21,7 +21,7 @@
     - es-plugins
 
 - name: Install elasticsearch plugins
-  command: ./plugin -i {{ item.install }}
+  command: ./plugin {{ es_plugin_install_command }} {{ item.install }}
   args:
     chdir: /usr/share/elasticsearch/bin
   with_items: "{{ es_plugins }}"
