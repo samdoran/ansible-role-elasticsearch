@@ -192,7 +192,7 @@
   service:
     name: elasticsearch
     state: restarted
-  when: es_http_listen_port != current_es_http_port.stdout
+  when: es_http_listen_port != (current_es_http_port.stdout | int )
   tags:
     - elasticsearch
 
