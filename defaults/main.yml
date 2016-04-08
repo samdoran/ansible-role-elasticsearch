@@ -1,15 +1,42 @@
 ---
 # Role variables
-es_version: 1.7
+es_group_name: "es"
+es_version: 2.x
 es_major_version: "{{ (es_version | string).split('.')[0] | int }}"
+es_number_of_nodes: "{{ groups[es_group_name] | length }}"
+
+es_plugin_bin: "{{ es_home }}/bin/plugin"
+es_plugin_install_command: "install"
+es_plugin_remove_command: "remove"
+
+es_http_listen_port: "{{ es_http_port }}"
+
+es_number_of_no_data_nodes: 0
+
+es_ssl_proxy: False
+
+es_update_plugins: False
+es_disable_swap: True
+
+# ES Plugins
+es_plugins:
+  - name: hq
+    install: "royrusso/elasticsearch-HQ"
+
+  - name: head
+    install: "mobz/elasticsearch-head"
+
+  - name: whatson
+    install: "xyu/elasticsearch-whatson/0.1.3"
+
 
 # Elasticsearch Sysconfig
-es_pid_dir: /var/run/elasticsearch
 es_home: /usr/share/elasticsearch
 es_conf_dir: /etc/elasticsearch
 es_data_dir: /var/lib/elasticsearch
 es_work_dir: /tmp/elasticsearch
 es_log_dir: /var/log/elasticsearch
+es_pid_dir: /var/run/elasticsearch
 es_heap_size: "{{ ansible_memtotal_mb // 2 }}m"
 # es_heap_newsize: ""
 # es_direct_size: ""
@@ -19,50 +46,57 @@ es_gc_log_file: /var/log/elasticsearch/gc.log
 es_user: elasticsearch
 es_group: elasticsearch
 es_startup_sleep_time: 5
-es_max_open_files: 65535
+es_max_open_files: 65536
 es_max_locked_memory: "{% if es_enable_mlockall %}unlimited{% else %}{{ ansible_memtotal_mb }}{% endif %}"
 es_max_map_count: 262144
 
 
 # elastisearch.yml
-es_ssl_proxy: False
+# ---------------------------------- Cluster -----------------------------------
+es_cluster_name: elasticsearch
+
+# ------------------------------------ Node ------------------------------------
+es_node_name: "{{ ansible_hostname }}"
+es_node_master: True
+es_node_data: True
+
+# ----------------------------------- Paths ------------------------------------
+es_path_data: "{{ es_data_dir }}"
+es_path_logs: "{{ es_log_dir }}"
+
+# ----------------------------------- Memory -----------------------------------
+es_enable_mlockall: true
+
+# ---------------------------------- Network -----------------------------------
+# For more information, see the documentation at:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html>
+es_network_host:
+  - localhost
+  - _site_
 es_http_port: 9200
-es_http_listen_port: "{{ es_http_port }}"
-es_http_max_content_length: 100
 es_transport_port: 9300
+es_http_max_content_length: 100
+
+# --------------------------------- Discovery ----------------------------------
+# For more information, see the documentation at:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-discovery.html>
+es_minimum_master_nodes: "{{ ((es_number_of_nodes | int) // 2) + 1 }}"
 es_multicast_ip: 224.2.2.4
 es_multicast_port: 54328
-es_cluster_name: elasticsearch
+
+# Example of automatically generated list of unicast discovery hosts from the
+# hosts in es_group_name
+#
+# es_unicast_discovery_hosts:
+#   "{% for host in groups[es_group_name] %}
+#     {%- if host != ansible_fqdn %}{{ host }}{% if not loop.last %},{% endif -%}{% endif %}
+#   {%- endfor %}"
+
+# ---------------------------------- Gateway -----------------------------------
+# For more information, see the documentation at:
+# <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-gateway.html>
+es_recovery_nodes: "{{ es_number_of_nodes | int - es_number_of_no_data_nodes }}"
+
+# ---------------------------------- Index -----------------------------------
 es_number_of_shards: 5
 es_number_of_replicas: 1
-es_group_name: "es"
-es_number_of_no_data_nodes: 0
-es_minimum_master_nodes: "{{ ((es_number_of_nodes | int) // 2) + 1 }}"
-es_number_of_nodes: "{{ groups[es_group_name] | length }}"
-es_recovery_nodes: "{{ es_number_of_nodes | int - es_number_of_no_data_nodes }}"
-es_enable_mlockall: true
-es_restart_on_config_change: true
-
-es_node_master: true
-es_node_data: true
-
-# ES Java Options
-es_java_opts_xmn: 128m
-es_java_opts_xss: 256k
-
-es_update_plugins: false
-es_disable_swap: true
-
-# ES Plugins
-es_plugins:
-  - name: HQ
-    install: "royrusso/elasticsearch-HQ"
-
-  - name: head
-    install: "mobz/elasticsearch-head"
-
-  - name: bigdesk
-    install: "lukas-vlcek/bigdesk"
-
-  - name: whatson
-    install: "xyu/elasticsearch-whatson/0.1.3"
