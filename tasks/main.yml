@@ -198,34 +198,34 @@
   tags:
     - elasticsearch
 
-- name: Get current value of discovery.zen.minimum_master_nodes
-  uri:
-    url: http://localhost:{{ es_http_listen_port }}/_cluster/settings
-    method: GET
-  until: es_settings.status == 200
-  retries: 20
-  delay: 30
-  register: es_settings
-  ignore_errors: True
-  when: not es_install_status.changed
-  tags:
-    - elasticsearch
+# - name: Get current value of discovery.zen.minimum_master_nodes
+#   uri:
+#     url: http://localhost:{{ es_http_listen_port }}/_cluster/settings
+#     method: GET
+#   until: es_settings.status == 200
+#   retries: 20
+#   delay: 30
+#   register: es_settings
+#   ignore_errors: True
+#   when: not es_install_status.changed
+#   tags:
+#     - elasticsearch
 
-- name: Update discovery.zen.minimum_master_nodes
-  uri:
-    url: http://localhost:{{ es_http_listen_port }}/_cluster/settings
-    method: PUT
-    body: '{"persistent" :{"discovery.zen.minimum_master_nodes": "{{ es_minimum_master_nodes }}"}}'
-    body_format: json
-  when: >
-    es_settings is defined
-    and (not es_install_status.changed
-    or es_settings.json.persistent is not defined
-    or es_settings.json.persistent.discovery is not defined
-    or es_settings.json.persistent.discovery.zen.minimum_master_nodes is not defined
-    or es_settings.json.persistent.discovery.zen.minimum_master_nodes !=  es_minimum_master_nodes)
-  tags:
-    - elasticsearch
+# - name: Update discovery.zen.minimum_master_nodes
+#   uri:
+#     url: http://localhost:{{ es_http_listen_port }}/_cluster/settings
+#     method: PUT
+#     body: '{"persistent" :{"discovery.zen.minimum_master_nodes": "{{ es_minimum_master_nodes }}"}}'
+#     body_format: json
+#   when: >
+#     es_settings is defined
+#     and (not es_install_status.changed
+#     or es_settings.json.persistent is not defined
+#     or es_settings.json.persistent.discovery is not defined
+#     or es_settings.json.persistent.discovery.zen.minimum_master_nodes is not defined
+#     or es_settings.json.persistent.discovery.zen.minimum_master_nodes !=  es_minimum_master_nodes)
+#   tags:
+#     - elasticsearch
 
 - include: update-plugins.yml
   when: es_update_plugins or es_install_status.changed
