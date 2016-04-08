@@ -4,21 +4,12 @@ es_group_name: "es"
 es_version: 2.x
 es_major_version: "{{ (es_version | string).split('.')[0] | int }}"
 es_number_of_nodes: "{{ groups[es_group_name] | length }}"
+es_number_of_no_data_nodes: 0
 
 es_plugin_bin: "{{ es_home }}/bin/plugin"
 es_plugin_install_command: "install"
 es_plugin_remove_command: "remove"
-
-es_http_listen_port: "{{ es_http_port }}"
-
-es_number_of_no_data_nodes: 0
-
-es_ssl_proxy: False
-
 es_update_plugins: False
-es_disable_swap: True
-
-# ES Plugins
 es_plugins:
   - name: hq
     install: "royrusso/elasticsearch-HQ"
@@ -28,6 +19,12 @@ es_plugins:
 
   - name: whatson
     install: "xyu/elasticsearch-whatson/0.1.3"
+
+es_ssl_proxy: False
+es_http_listen_port: "{{ es_http_port }}"
+
+es_disable_swap: True
+
 
 
 # Elasticsearch Sysconfig
@@ -72,7 +69,7 @@ es_enable_mlockall: true
 # <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html>
 es_network_host:
   - localhost
-  - _site_
+  - "{{ ansible_default_ipv4.address }}"
 es_http_port: 9200
 es_transport_port: 9300
 es_http_max_content_length: 100
