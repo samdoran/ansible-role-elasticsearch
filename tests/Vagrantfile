@@ -1,20 +1,48 @@
-# -*- mode: ruby -*-
-# vi: set ft=ruby :
-
 Vagrant.configure(2) do |config|
   config.vm.box = "chef/centos-6.7"
 
-  (1..3).each do |i|
-    config.vm.define "estest-#{i}" do |node|
-      node.vm.box = "geerlingguy/centos6"
-      node.vm.provider :virtualbox do |vm|
-        vm.name = "estest-#{i}"
-        vm.memory = 2048
-        vm.cpus = 1
-      end
-      node.vm.hostname = "estest-#{i}"
-      node.vm.network "private_network", ip: "10.77.19.1#{i}"
-      node.vm.network "forwarded_port", guest: 9200, host: 9201
+  # CentOS 6
+  config.vm.define "es-1" do |node|
+    node.vm.box = "geerlingguy/centos6"
+    node.vm.provider :virtualbox do |vbox|
+      vbox.name = "es-1"
+      vbox.memory = 1024
+      vbox.cpus = 2
+    end
+    node.vm.hostname = "es-1"
+    node.vm.network "private_network", ip: "10.77.19.11"
+  end
+
+  # CentOS 7
+  config.vm.define "es-2" do |node|
+    node.vm.box = "geerlingguy/centos7"
+    node.vm.hostname = "es-2"
+    node.vm.network "private_network", ip: "10.77.19.12"
+    config.vm.provider "virtualbox" do |vbox|
+      vbox.memory = 1024
+      vbox.cpus = 2
+    end
+  end
+
+  # Ubuntu 12.04
+  config.vm.define "es-3" do |node|
+    node.vm.box = "geerlingguy/ubuntu1204"
+    node.vm.hostname = "es-3"
+    node.vm.network "private_network", ip: "10.77.19.13"
+    config.vm.provider "virtualbox" do |vbox|
+      vbox.memory = 1024
+      vbox.cpus = 2
+    end
+  end
+
+  # Ubuntu 14.04
+  config.vm.define "es-4" do |node|
+    node.vm.box = "geerlingguy/ubuntu1404"
+    node.vm.hostname = "es-4"
+    node.vm.network "private_network", ip: "10.77.19.14"
+    config.vm.provider "virtualbox" do |vbox|
+      vbox.memory = 1024
+      vbox.cpus = 2
     end
   end
 
