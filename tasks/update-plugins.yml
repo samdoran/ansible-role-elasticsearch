@@ -1,4 +1,3 @@
----
 - name: Check for elasticsearch plugins
   stat:
     path: "{{ es_home }}/plugins/{{ item.name }}"

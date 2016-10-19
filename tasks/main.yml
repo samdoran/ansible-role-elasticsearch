@@ -1,4 +1,3 @@
----
 - name: Install Java
   yum:
     name: java-1.8.0-openjdk
@@ -22,7 +21,7 @@
 - name: Get current HTTP port
   shell: "grep http.port {{ es_conf_dir }}/elasticsearch.yml | cut -d ' ' -f 2"
   register: current_es_http_port
-  changed_when: False
+  changed_when: no
   tags:
     - elasticsearch
 
