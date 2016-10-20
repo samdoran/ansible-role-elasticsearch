@@ -22,7 +22,7 @@ es_plugins:
 es_ssl_proxy: no
 es_http_listen_port: "{{ es_http_port }}"
 
-es_disable_swap: yes
+es_disable_swap: no
 
 
 

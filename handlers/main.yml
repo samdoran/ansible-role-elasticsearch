@@ -1,11 +1,11 @@
-- name: restart elasticsearch
-  service:
-    name: elasticsearch
-    state: restarted
-    sleep: 15
-
 - name: turn off swap
   command: swapoff -a
 
 - name: turn on swap
   command: swapon -a
+
+- name: restart elasticsearch
+  service:
+    name: elasticsearch
+    state: restarted
+    sleep: 15

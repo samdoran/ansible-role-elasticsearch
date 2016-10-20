@@ -5,6 +5,7 @@
   vars:
     es_group_name: all
     es_minimum_master_nodes: 1
+    es_recovery_nodes: 1
     es_update_plugins: no
     es_unicast_discovery_hosts: "10.77.19.11, 10.77.19.12"
     es_network_host:
