@@ -1,4 +1,8 @@
 - hosts: all
 
+  vars:
+    es_group_name: all
+
   roles:
+    - java
     - role_under_test
