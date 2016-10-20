@@ -4,13 +4,13 @@ Vagrant.configure(2) do |config|
   # CentOS 6
   config.vm.define "es-1" do |node|
     node.vm.box = "geerlingguy/centos6"
-    node.vm.provider :virtualbox do |vbox|
+    node.vm.hostname = "es-1"
+    node.vm.network "private_network", ip: "10.77.19.11"
+    config.vm.provider :virtualbox do |vbox|
       vbox.name = "es-1"
       vbox.memory = 1024
       vbox.cpus = 2
     end
-    node.vm.hostname = "es-1"
-    node.vm.network "private_network", ip: "10.77.19.11"
   end
 
   # CentOS 7
@@ -19,6 +19,7 @@ Vagrant.configure(2) do |config|
     node.vm.hostname = "es-2"
     node.vm.network "private_network", ip: "10.77.19.12"
     config.vm.provider "virtualbox" do |vbox|
+      vbox.name = "es-2"
       vbox.memory = 1024
       vbox.cpus = 2
     end
@@ -30,6 +31,7 @@ Vagrant.configure(2) do |config|
     node.vm.hostname = "es-3"
     node.vm.network "private_network", ip: "10.77.19.13"
     config.vm.provider "virtualbox" do |vbox|
+      vbox.name = "es-3"
       vbox.memory = 1024
       vbox.cpus = 2
     end
@@ -41,6 +43,7 @@ Vagrant.configure(2) do |config|
     node.vm.hostname = "es-4"
     node.vm.network "private_network", ip: "10.77.19.14"
     config.vm.provider "virtualbox" do |vbox|
+      vbox.name = "es-4"
       vbox.memory = 1024
       vbox.cpus = 2
     end
