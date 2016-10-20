@@ -8,7 +8,7 @@ es_number_of_no_data_nodes: 0
 es_plugin_bin: "{{ es_home }}/bin/plugin"
 es_plugin_install_command: "install"
 es_plugin_remove_command: "remove"
-es_update_plugins: False
+es_update_plugins: no
 es_plugins:
   - name: hq
     install: "royrusso/elasticsearch-HQ"
@@ -19,10 +19,10 @@ es_plugins:
   - name: whatson
     install: "xyu/elasticsearch-whatson/0.1.3"
 
-es_ssl_proxy: False
+es_ssl_proxy: no
 es_http_listen_port: "{{ es_http_port }}"
 
-es_disable_swap: True
+es_disable_swap: yes
 
 
 
@@ -37,7 +37,7 @@ es_heap_size: "{{ ansible_memtotal_mb // 2 }}m"
 # es_heap_newsize: ""
 # es_direct_size: ""
 # es_java_opts: ""
-es_restart_on_upgrade: True
+es_restart_on_upgrade: yes
 es_gc_log_file: /var/log/elasticsearch/gc.log
 es_user: elasticsearch
 es_group: elasticsearch
@@ -53,15 +53,15 @@ es_cluster_name: elasticsearch
 
 # ------------------------------------ Node ------------------------------------
 es_node_name: "{{ ansible_hostname }}"
-es_node_master: True
-es_node_data: True
+es_node_master: yes
+es_node_data: yes
 
 # ----------------------------------- Paths ------------------------------------
 es_path_data: "{{ es_data_dir }}"
 es_path_logs: "{{ es_log_dir }}"
 
 # ----------------------------------- Memory -----------------------------------
-es_enable_mlockall: true
+es_enable_mlockall: yes
 
 # ---------------------------------- Network -----------------------------------
 # For more information, see the documentation at:
