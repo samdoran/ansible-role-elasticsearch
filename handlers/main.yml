@@ -8,4 +8,4 @@
   service:
     name: elasticsearch
     state: restarted
-    sleep: 15
+    sleep: "{{ '15' if ansible_service_mgr != 'systemd' else omit }}"

@@ -16,7 +16,10 @@ path.logs: {{ es_path_logs }}
 
 # ----------------------------------- Memory -----------------------------------
 {% if es_enable_mlockall %}
-bootstrap.mlockall: {{ es_enable_mlockall | lower }}
+bootstrap.memory_lock: {{ es_enable_mlockall | lower }}
+{% endif %}
+{% if ansible_os_family == 'RedHat' and ansible_distribution_major_version | version_compare('6', '=') %}
+bootstrap.system_call_filter: false
 {% endif %}
 
 # ---------------------------------- Network -----------------------------------
@@ -28,22 +31,8 @@ http.max_content_length: {{ es_http_max_content_length }}mb
 # --------------------------------- Discovery ----------------------------------
 discovery.zen.minimum_master_nodes: {{ es_minimum_master_nodes }}
 {% if es_unicast_discovery_hosts is defined %}
-discovery.zen.ping.unicast.enabled: true
 discovery.zen.ping.unicast.hosts: "{{ es_unicast_discovery_hosts }}"
-discovery.zen.ping.multicast.enabled: false
-{% else %}
-discovery.zen.ping.multicast.enabled: true
-discovery.zen.ping.multicast.group: {{ es_multicast_ip }}
-discovery.zen.ping.multicast.port: {{ es_multicast_port }}
-discovery.zen.ping.multicast.ttl: 5
 {% endif %}
 
 # ---------------------------------- Gateway -----------------------------------
 gateway.recover_after_data_nodes: {{ es_recovery_nodes }}
-
-# ---------------------------------- Index -----------------------------------
-index.number_of_shards: {{ es_number_of_shards }}
-index.number_of_replicas: {{ es_number_of_replicas }}
-
-# ---------------------------------- Marvel -----------------------------------
-marvel.agent.exporter.es.hosts: "localhost:{{ es_http_listen_port }}"

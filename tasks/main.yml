@@ -1,8 +1,11 @@
+# TODO This may be able to be handeled better by using network.publish_host
+# https://www.elastic.co/guide/en/elasticsearch/reference/5.4/modules-network.html#advanced-network-settings
 - name: Set es_http_listen_port
   set_fact:
     es_http_listen_port: "{{ es_http_port + 1 }}"
   when: es_ssl_proxy
   tags:
+    - always
     - elasticsearch
     - es-config
     - es-nginx
@@ -15,19 +18,8 @@
   register: current_es_http_port
   changed_when: no
   tags:
+    - always
     - elasticsearch
-
-- name: Remove old 1.x repos
-  file:
-    path: /etc/yum.repos.d/elasticsearch-1.{{ item }}.repo
-    state: absent
-  with_sequence:
-    start=1
-    end=7
-    stride=1
-  tags:
-    - elasticsearch
-    - es-yum
 
 - name: Install elasticsearch repo
   template:
@@ -64,10 +56,27 @@
     owner: root
     group: root
     mode: 0644
+  notify: restart elasticsearch
   tags:
     - elasticsearch
     - es-config
+
+# FIXME
+# Seems this could be done more cleanly with replace, but I kept getting errors
+# when trying to use a backreference.
+- name: Set heap size
+  lineinfile:
+    dest: "{{ es_conf_dir }}/jvm.options"
+    regexp: ^\-{{ item }}.*$
+    line: '-{{ item }}{{ es_heap_size }}'
+  when: es_major_version | version_compare('5', '>=')
   notify: restart elasticsearch
+  with_items:
+    - Xms
+    - Xmx
+  tags:
+    - elasticsearch
+    - es-config
 
 - name: Copy elasticsearch system config
   template:
@@ -88,7 +97,6 @@
     state: started
   tags:
     - elasticsearch
-    - name
 
 - name: Copy elasticsearch nginx config
   template:
@@ -147,31 +155,8 @@
     - es-config
     - es-swap
 
-- name: Add job to compress old elasticsearch logs
-  cron:
-    name: "Compress elasticsearch logs"
-    state: present
-    user: root
-    cron_file: elasticsearch
-    hour: 4
-    minute: 10
-    job: "find /var/log/elasticsearch -type f -mtime +1 -name '*.log.2*' ! -name '*.gz' -exec gzip '{}' ';'"
-  tags:
-    - elasticsearch
-    - es-cron
-
-- name: Add task to delete old elasticsearch logs
-  cron:
-    name: "Delete elasticsearch logs"
-    state: present
-    user: root
-    cron_file: elasticsearch
-    hour: 4
-    minute: 00
-    job: "find /var/log/elasticsearch -type f -mtime +10 -name '*.gz' -exec rm '{}' ';'"
-  tags:
-    - elasticsearch
-    - es-cron
+# TODO Add template for log4j settings
+# https://www.elastic.co/guide/en/elasticsearch/reference/5.4/settings.html#logging
 
 # This extra restart is necessary to prevent the check following tasks from
 # failing because they will be looking at the wrong port.
@@ -189,34 +174,13 @@
   tags:
     - elasticsearch
 
-# - name: Get current value of discovery.zen.minimum_master_nodes
-#   uri:
-#     url: http://localhost:{{ es_http_listen_port }}/_cluster/settings
-#     method: GET
-#   until: es_settings.status == 200
-#   retries: 20
-#   delay: 30
-#   register: es_settings
-#   ignore_errors: True
-#   when: not es_install_status.changed
-#   tags:
-#     - elasticsearch
-
-# - name: Update discovery.zen.minimum_master_nodes
-#   uri:
-#     url: http://localhost:{{ es_http_listen_port }}/_cluster/settings
-#     method: PUT
-#     body: '{"persistent" :{"discovery.zen.minimum_master_nodes": "{{ es_minimum_master_nodes }}"}}'
-#     body_format: json
-#   when: >
-#     es_settings is defined
-#     and (not es_install_status.changed
-#     or es_settings.json.persistent is not defined
-#     or es_settings.json.persistent.discovery is not defined
-#     or es_settings.json.persistent.discovery.zen.minimum_master_nodes is not defined
-#     or es_settings.json.persistent.discovery.zen.minimum_master_nodes !=  es_minimum_master_nodes)
-#   tags:
-#     - elasticsearch
-
-- include: update-plugins.yml
-  when: es_update_plugins or es_install_status.changed
+- name: Install plugins
+  elasticsearch_plugin:
+    name: "{{ item.name | default(item) }}"
+    version: "{{ item.version | default(omit) }}"
+    state: "{{ item.state | default(omit) }}"
+    plugin_bin: "{{ es_plugin_bin | default(omit) }}"
+  with_items: "{{ es_plugins }}"
+  tags:
+    - elasticsearch
+    - es-plugins

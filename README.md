@@ -3,7 +3,7 @@ Elasticsearch
 [![Galaxy](https://img.shields.io/badge/galaxy-samdoran.elasticsearch-blue.svg?style=flat)](https://galaxy.ansible.com/samdoran/elasticsearch)
 [![Build Status](https://travis-ci.org/samdoran/ansible-role-elasticsearch.svg?branch=master)](https://travis-ci.org/samdoran/ansible-role-elasticsearch)
 
-Install Elasticsearch `2.x`, `1.7`, `1.3`, etc. Heap size is dynamically calculated based on total system memory. Plugins get installed when elasticsearch is installed initially.
+Install Elasticsearch `5.x`. Heap size is dynamically calculated based on total system memory. Plugins get installed when elasticsearch is installed initially.
 
 Requirements
 ------------
@@ -25,8 +25,7 @@ Role Variables
 | `es_plugin_bin` | `{{ es_home }}/bin/plugin` | Path to the plugin binary. |
 | `es_plugin_install_command` | `install` | Plugin nstall command passed to `es_plugin_bin`. This is different between versions of Elasticsearch. |
 | `es_plugin_remove_command` | `remove` | Plugin remove command passed to `es_plugin_bin`. This is different between versions of Elasticsearch. |
-| `es_update_plugins` | `False` | Whether or not to update plugins. By default, they are updated when Elasticsearch is updated. |
-| `es_plugins` | `[see defaults/main.yml]` | List of plugins to install. |
+| `es_plugins` | `[see defaults/main.yml]` | List of plugins to install. As of 5.4, site only official plugins are supported. |
 | `es_ssl_proxy` | `False` | Wherether or not an SSL proxy is used in front of Elasticsearch. Requires nginx role. |
 | `es_http_listen_port` | `{{ es_http_port }}` | ES HTTP port when using a proxy server. This will be the port in `elasticsearch.yml`. |
 | `es_disable_swap` | `True` | Whether or not to disable swap on the system.   |
@@ -39,13 +38,10 @@ Role Variables
 | `es_home` | `/usr/share/elasticsearch` | Directory where Elasticsearch is installed. |
 | `es_conf_dir` | `/etc/elasticsearch` | Directory containing Elasticsearch configuration. |
 | `es_data_dir` | `/var/lib/elasticsearch` | Directory containing Elasticsearch data. |
-| `es_work-Dir` | `/tmp/elasticseacrh` | Temp directory. |
 | `es_log_dir` | `/var/log/elasticsearch` | Log directory. |
 | `es_pid_dir` | `/var/run/elasticsearch` | PID directory. |
 | `es_heap_size` | 50% of total system memory in MB | Memory heap size for ES |
-| `es_heap_newsize` | `undefined` |  |
-| `es_direct_size` | `undefined` |  |
-| `es_java_opts` | `undefined` |  |
+| `es_java_opts` | `undefined` | Any extra Java options |
 | `es_restart_on_upgrade` | `True` |  |
 | `es_gc_log_file` | `/var/log/elasticsearch/gc.log` | Garbage collection log file. |
 | `es_user` | `elasticsearch` | Elasticsearch user account. |
@@ -72,11 +68,7 @@ Role Variables
 | `es_transport_port`    | 9300    | Node to node communication port   |
 | `es_http_max_content_length` | 100 | Max HTTP put size used in Elasticsearch nginx proxy config and `elasticsearch.yml` |
 | `es_minimum_master_nodes` | `{{ ((es_number_of_nodes | int) // 2) + 1 }}` | Minimum number of master nodes that must be available before the cluster is up. |
-| `es_multicast_ip`    | `224.2.2.4` | Multicast address used for ES node discovery |
-| `es_multicast_port`    | `54328` | Multicast port used for ES node discovery |
-| `es_unicast_discovery_hosts`  | `[undefined]` | A comma separated list of hosts to contact for discovery -- when defined disables multicast discovery. |
-| `es_number_of_shards`  | `5` | Number of shards |
-| `es_number_of_replicas` | `1` | Number of replicas |
+| `es_unicast_discovery_hosts`  | `[undefined]` | A comma separated list of hosts to contact for discovery. |
 | `es_recovery_nodes` | `{{ es_number_of_nodes | int - es_number_of_no_data_nodes }}` |  |
 
 Example Playbook
