@@ -52,7 +52,7 @@ es_enable_mlockall: no
 # ---------------------------------- Network -----------------------------------
 # For more information, see the documentation at:
 # <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html>
-es_ansible_distribution_major_versionansible_distribution_major_versionhost:
+es_network_host:
   - _local_
   - "{{ ansible_default_ipv4.address }}"
 es_http_port: 9200
