@@ -1,13 +1,11 @@
 # Role variables
 es_group_name: "es"
-es_version: 5.x
-es_major_version: "{{ (es_version | string).split('.')[0] | int }}"
+es_version: 5
+es_install_state: latest
 es_number_of_nodes: "{{ groups[es_group_name] | length }}"
 es_number_of_no_data_nodes: 0
 
 es_plugin_bin: "{{ es_home }}/bin/elasticsearch-plugin"
-es_plugin_install_command: "install"
-es_plugin_remove_command: "remove"
 es_plugins: []
 
 es_ssl_proxy: no

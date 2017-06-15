@@ -1,0 +1,48 @@
+- name: Set limits for elasticsearch user
+  template:
+    src: etc-limits-elasticsearch.conf.j2
+    dest: /etc/security/limits.d/elasticsearch.conf
+  when: ansible_distribution_major_version | version_compare('6', '=')
+  tags:
+    - elasticsearch
+    - es-config
+
+- name: Install elasticsearch repo
+  template:
+    src: elasticsearch.repo.j2
+    dest: /etc/yum.repos.d/elasticsearch.repo
+    owner: root
+    group: root
+    mode: 0644
+  tags:
+    - elasticsearch
+    - es-yum
+
+- name: Install Elasticsearch GPG key
+  rpm_key:
+    key: "https://packages.elastic.co/GPG-KEY-elasticsearch"
+    state: present
+  tags:
+    - elasticsearch
+    - es-yum
+
+- name: Install elasticsearch
+  yum:
+    name: elasticsearch{{ '' if es_install_state == 'latest' else '-' ~ es_version ~ '*' }}
+    state: "{{ es_install_state }}"
+  register: es_install_status
+  notify: restart elasticsearch
+  tags:
+    - elasticsearch
+
+- name: Copy elasticsearch system config
+  template:
+    src: etc-sysconfig-elasticsearch.j2
+    dest: /etc/sysconfig/elasticsearch
+    owner: root
+    group: root
+    mode: 0644
+  notify: restart elasticsearch
+  tags:
+    - elasticsearch
+    - es-config

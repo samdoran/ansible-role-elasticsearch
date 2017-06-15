@@ -18,15 +18,13 @@ Role Variables
 |   Name       | Default Value | Description                    |
 |--------------|---------------|--------------------------------|
 | `es_group_name`    | es    | Name of host group that contains elasticsearch hosts. Used for `es_number_of_nodes` and to calculate `discovery.zen.minimum_master_nodes`   |
-| `es_version` | `2.x` | Version of Elasticsearch to install. |
-| `es_major_version` | `[calculated]` | Either `1` or `2` based on `es_version`. Used to determine proper settings in `etc-sysconfig-elasticsearch.j2`|
+| `es_version` | `5.x` | Version of Elasticsearch to install. Can be a major version, such as `2` or `5`, or a specific point release, such as `2.1` or `5.1.2`. |
+| `es_install_state` | `latest` | Whether or not to install the latest point release of the major version. If you want the specific `es_version` to be installed, set this to `present`. In the default configuration, the latest point release of the major version will be instnalled. |
 | `es_number_of_nodes` | `[calculated]` | Total number of nodes in the cluster. Used for calculating number of minimum master and recovery nodes. |
 | `es_number_of_no_data_nodes` | `0` | Set this to the number of no data or master only nodes in your cluster. How many nodes have no data, subtracted from number of nodes that need to be up for recovery. |
-| `es_plugin_bin` | `{{ es_home }}/bin/plugin` | Path to the plugin binary. |
-| `es_plugin_install_command` | `install` | Plugin nstall command passed to `es_plugin_bin`. This is different between versions of Elasticsearch. |
-| `es_plugin_remove_command` | `remove` | Plugin remove command passed to `es_plugin_bin`. This is different between versions of Elasticsearch. |
-| `es_plugins` | `[see defaults/main.yml]` | List of plugins to install. As of 5.4, site only official plugins are supported. |
-| `es_ssl_proxy` | `False` | Wherether or not an SSL proxy is used in front of Elasticsearch. Requires nginx role. |
+| `es_plugin_bin` | `{{ es_home }}/bin/elasticsearch-plugin` | Path to the plugin binary. |
+| `es_plugins` | `[]` | List of plugins to install. As of 5.4, only official plugins are supported. |
+| `es_ssl_proxy` | `False` | Wherether or not an SSL proxy is used in front of Elasticsearch. Requires `nginx` role. |
 | `es_http_listen_port` | `{{ es_http_port }}` | ES HTTP port when using a proxy server. This will be the port in `elasticsearch.yml`. |
 | `es_disable_swap` | `True` | Whether or not to disable swap on the system.   |
 | `es_update_plugins` | `False` | Whether or not to update plugins |

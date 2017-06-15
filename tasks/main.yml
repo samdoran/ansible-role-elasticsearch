@@ -21,33 +21,14 @@
     - always
     - elasticsearch
 
-- name: Install elasticsearch repo
-  template:
-    src: elasticsearch.repo.j2
-    dest: /etc/yum.repos.d/elasticsearch.repo
-    owner: root
-    group: root
-    mode: 0644
+- name: Include distribution specific variables
+  include_vars: "{{ ansible_os_family }}.yml"
   tags:
+    - always
     - elasticsearch
-    - es-yum
 
-- name: Install Elasticsearch GPG key
-  rpm_key:
-    key: "https://packages.elastic.co/GPG-KEY-elasticsearch"
-    state: present
-  tags:
-    - elasticsearch
-    - es-yum
-
-- name: Install elasticsearch
-  yum:
-    name: elasticsearch
-    state: latest
-  register: es_install_status
-  notify: restart elasticsearch
-  tags:
-    - elasticsearch
+- name: Include distribution specific tasks
+  include: Install-{{ ansible_os_family }}.yml
 
 - name: Copy main elasticsearch config
   template:
@@ -78,18 +59,6 @@
     - elasticsearch
     - es-config
 
-- name: Copy elasticsearch system config
-  template:
-    src: etc-sysconfig-elasticsearch.j2
-    dest: /etc/sysconfig/elasticsearch
-    owner: root
-    group: root
-    mode: 0644
-  notify: restart elasticsearch
-  tags:
-    - elasticsearch
-    - es-config
-
 - name: Start and enable elasticsearch
   service:
     name: elasticsearch
@@ -101,7 +70,7 @@
 - name: Copy elasticsearch nginx config
   template:
     src: etc-nginx-conf.d-elasticsearch.j2
-    dest: /etc/nginx/conf.d/elasticsearch.conf
+    dest: "{{ nginx_conf_dir }}/elasticsearch.conf"
     owner: root
     group: root
     mode: 0644
@@ -115,7 +84,7 @@
 
 - name: Remove elasticsearch nginx config
   file:
-    path: /etc/nginx/conf.d/elasticsearch.conf
+    path: "{{ nginx_conf_dir }}/elasticsearch.conf"
     state: absent
   tags:
     - elasticsearch

@@ -1,1 +1,1 @@
----
+es_major_version: "{{ (es_version | string).split('.')[0] | int }}"
