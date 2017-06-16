@@ -67,6 +67,12 @@
   tags:
     - elasticsearch
 
+- name: Wait for elasticsearch HTTP port
+  wait_for:
+    port: "{{ es_http_listen_port }}"
+  tags:
+    - elasticsearch
+
 - name: Copy elasticsearch nginx config
   template:
     src: etc-nginx-conf.d-elasticsearch.j2
