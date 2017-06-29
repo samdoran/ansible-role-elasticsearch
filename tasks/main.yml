@@ -13,6 +13,14 @@
     - es-kibana
     - es-kibanaconfig
 
+- name: See if elasticsearch.yml exists
+  stat:
+    path: "{{ es_conf_dir }}/elasticsearch.yml"
+  register: es_intial_install_test
+  tags:
+    - always
+    - elasticsearch
+
 - name: Get current HTTP port
   shell: "grep http.port {{ es_conf_dir }}/elasticsearch.yml | cut -d ' ' -f 2"
   register: current_es_http_port
@@ -64,14 +72,43 @@
     name: elasticsearch
     enabled: yes
     state: started
+  register: es_start
   tags:
     - elasticsearch
 
-- name: Wait for elasticsearch HTTP port
-  wait_for:
-    port: "{{ es_http_listen_port }}"
+- name: Restart elasticsearch if new HTTP port is different
+  service:
+    name: elasticsearch
+    state: restarted
+  when:
+    - es_http_listen_port != (current_es_http_port.stdout | int )
+    - not es_intial_install_test.stat.exists or not es_start | changed
+  register: second_restart
   tags:
     - elasticsearch
+
+- block:
+  - name: Wait for elasticsearch HTTP port
+    wait_for:
+      port: "{{ es_http_listen_port }}"
+      timeout: 90
+    tags:
+      - elasticsearch
+
+  rescue:
+    - name: Restart elasticsearch if new HTTP port is different
+      service:
+        name: elasticsearch
+        state: restarted
+      tags:
+        - elasticsearch
+
+    - name: Wait for elasticsearch HTTP port
+      wait_for:
+        port: "{{ es_http_listen_port }}"
+        timeout: 90
+      tags:
+        - elasticsearch
 
 - name: Copy elasticsearch nginx config
   template:
@@ -132,22 +169,6 @@
 
 # TODO Add template for log4j settings
 # https://www.elastic.co/guide/en/elasticsearch/reference/5.4/settings.html#logging
-
-# This extra restart is necessary to prevent the check following tasks from
-# failing because they will be looking at the wrong port.
-- name: Restart elasticsearch if new HTTP port is different
-  service:
-    name: elasticsearch
-    state: restarted
-  when: es_http_listen_port != (current_es_http_port.stdout | int )
-  tags:
-    - elasticsearch
-
-- name: Wait for elasticsearch HTTP port
-  wait_for:
-    port: "{{ es_http_listen_port }}"
-  tags:
-    - elasticsearch
 
 - name: Install plugins
   elasticsearch_plugin:
