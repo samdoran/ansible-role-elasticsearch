@@ -17,18 +17,23 @@ script:
   - container_id=$(date +%s)
 
   # Run container in detached state.
-  - 'docker run --detach --volume="${PWD}":/etc/ansible/roles/role_under_test:ro --name $container_id ${run_opts} samdoran/${distro}-ansible:latest "${init}"'
+  - echo "Running container"
+  - docker run --detach --volume="$PWD":/etc/ansible/roles/role_under_test:ro --name $container_id $run_opts samdoran/${distro}-ansible:latest $init
 
   # Install dependencies
+  - echo "Installing role dependencies"
   - docker exec --tty $container_id ansible-galaxy install -r /etc/ansible/roles/role_under_test/tests/requirements.yml
 
   # Ansible syntax check.
+  - echo "Checking role syntax"
   - docker exec --tty $container_id ansible-playbook /etc/ansible/roles/role_under_test/tests/travis.yml --syntax-check
 
   # Test role.
+  - echo "Running the role"
   - docker exec --tty $container_id ansible-playbook /etc/ansible/roles/role_under_test/tests/travis.yml
 
   # Test role idempotence.
+  - echo "Testing role idempotence"
   - idempotence_log=$(mktemp)
   - docker exec --tty $container_id ansible-playbook /etc/ansible/roles/role_under_test/tests/travis.yml | tee -a $idempotence_log
   - >
