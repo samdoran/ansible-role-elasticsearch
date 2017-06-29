@@ -1,0 +1,35 @@
+- name: DEBIAN | Set kernel settings
+  sysctl:
+    sysctl_file: /etc/sysctl.d/10-elasticsearch.conf
+    name: "{{ item.name }}"
+    value: "{{ item.value }}"
+  with_items: "{{ es_kernel_settings }}"
+  tags:
+    - elasticsearch
+    - es-config
+
+- name: DEBIAN | Install Elasticsearch apt key
+  apt_key:
+    url: https://packages.elastic.co/GPG-KEY-elasticsearch
+    state: present
+  tags:
+    - elasticsearch
+    - es-config
+
+- name: DEBIAN | Install Elasticsearch repo
+  apt_repository:
+    repo: deb http://packages.elastic.co/elasticsearch/{{ es_major_version }}.x/debian stable main
+    state: present
+    update_cache: yes
+  tags:
+    - elasticsearch
+    - es-config
+
+- name: DEBIAN | Install Elasticsearch
+  apt:
+    pkg: elasticsearch{{ '' if es_install_state == 'latest' else '=' ~ es_version ~ '*' }}
+    state: "{{ es_install_state }}"
+  register: es_install_status
+  notify: restart elasticsearch
+  tags:
+    - elasticsearch

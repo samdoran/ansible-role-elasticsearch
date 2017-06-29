@@ -1,0 +1,10 @@
+nginx_conf_dir: /etc/nginx/conf.d
+es_kernel_settings:
+  - name: fs.file-max
+    value: 262144
+
+  - name: vm.max_map_count
+    value: 262144
+
+  - name: vm.swappiness
+    value: 1
