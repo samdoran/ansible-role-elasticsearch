@@ -2,6 +2,8 @@
 
   vars:
     es_group_name: all
+    es_network_host:
+      - _local_
 
   roles:
     - java
