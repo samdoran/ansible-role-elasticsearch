@@ -46,5 +46,7 @@ script:
     && (echo 'Idempotence test: pass' && exit 0)
     || (echo 'Idempotence test: fail' && exit 1)
 
+  - docker exec --tty $container_id curl localhost:9200/
+
 notifications:
   webhooks: https://galaxy.ansible.com/api/v1/notifications/
