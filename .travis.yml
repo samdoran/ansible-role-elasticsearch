@@ -34,12 +34,12 @@ script:
 
   # Test role.
   - echo "Running the role"
-  - docker exec --tty $container_id ansible-playbook /etc/ansible/roles/role_under_test/tests/travis.yml
+  - docker exec --tty $container_id ansible-playbook /etc/ansible/roles/role_under_test/tests/travis.yml --skip-tags skipci
 
   # Test role idempotence.
   - echo "Testing role idempotence"
   - idempotence_log=$(mktemp)
-  - docker exec --tty $container_id ansible-playbook /etc/ansible/roles/role_under_test/tests/travis.yml | tee -a $idempotence_log
+  - docker exec --tty $container_id ansible-playbook /etc/ansible/roles/role_under_test/tests/travis.yml --skip-tags skipci | tee -a $idempotence_log
   - >
     tail $idempotence_log
     | grep -q 'changed=0.*failed=0'
