@@ -1,4 +1,5 @@
 galaxy_info:
+  role_name: elasticsearch
   author: Sam Doran
   description: Elasticsearch is a highly scalable open-source full-text search and analytics engine.
   company: Ansible by Red Hat
