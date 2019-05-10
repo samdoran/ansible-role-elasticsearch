@@ -12,20 +12,20 @@ CONF_FILE={{ es_conf_dir }}/elasticsearch.yml
 CONF_DIR={{ es_conf_dir }}
 DATA_DIR={{ es_data_dir }}
 LOG_DIR={{ es_log_dir }}
-{% if es_major_version >= 2 %}
+{% if es_major_version is version_compare('2', '>=') %}
 PID_DIR={{ es_pid_dir }}
 {% endif %}
 {% if es_java_opts is defined %}
 ES_JAVA_OPTS="{{ es_java_opts }}"
 {% endif %}
-{% if es_major_version >= 2 %}ES_{% endif %}RESTART_ON_UPGRADE={{ es_restart_on_upgrade | lower }}
+{% if es_major_version is version_compare('2', '>=') %}ES_{% endif %}RESTART_ON_UPGRADE={{ es_restart_on_upgrade | lower }}
 
 ################################
 # Elasticsearch service
 ################################
 ES_USER={{ es_user }}
 ES_GROUP={{ es_group }}
-{% if es_major_version | int >= 2 and ansible_os_family == "RedHat" and ansible_distribution_major_version | version_compare('7','>=') %}
+{% if es_major_version is version_compare('7', '>=') and ansible_os_family == "RedHat" and ansible_distribution_major_version is version_compare('7','>=') %}
 ES_STARTUP_SLEEP_TIME={{ es_startup_sleep_time }}
 {% endif %}
 
