@@ -2,7 +2,7 @@
   template:
     src: etc-limits-elasticsearch.conf.j2
     dest: /etc/security/limits.d/elasticsearch.conf
-  when: ansible_distribution_major_version | version_compare('6', '=')
+  when: ansible_facts.distribution_major_version is version_compare('6', '=')
   tags:
     - elasticsearch
     - es-config
@@ -13,7 +13,7 @@
     dest: /etc/yum.repos.d/elasticsearch.repo
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   tags:
     - elasticsearch
     - es-yum
@@ -41,7 +41,7 @@
     dest: /etc/sysconfig/elasticsearch
     owner: root
     group: root
-    mode: 0644
+    mode: '0644'
   notify: restart elasticsearch
   tags:
     - elasticsearch

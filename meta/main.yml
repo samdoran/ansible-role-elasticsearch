@@ -3,8 +3,8 @@ galaxy_info:
   author: Sam Doran
   description: Elasticsearch is a highly scalable open-source full-text search and analytics engine.
   company: Ansible by Red Hat
-  license: MIT
-  min_ansible_version: 2.1
+  license: Apache 2.0
+  min_ansible_version: 2.4
 
   platforms:
     - name: EL

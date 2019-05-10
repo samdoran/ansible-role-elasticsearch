@@ -30,13 +30,13 @@
     - elasticsearch
 
 - name: Include distribution specific variables
-  include_vars: "{{ ansible_os_family }}.yml"
+  include_vars: "{{ ansible_facts.os_family }}.yml"
   tags:
     - always
     - elasticsearch
 
 - name: Include distribution specific tasks
-  include_tasks: install-{{ ansible_os_family }}.yml
+  include_tasks: install-{{ ansible_facts.os_family }}.yml
 
 - name: Copy main elasticsearch config
   template:
@@ -60,7 +60,7 @@
     line: '-{{ item }}{{ es_heap_size }}'
   when: es_major_version | version_compare('5', '>=')
   notify: restart elasticsearch
-  with_items:
+  loop:
     - Xms
     - Xmx
   tags:
@@ -88,12 +88,12 @@
     - elasticsearch
 
 - block:
-  - name: Wait for elasticsearch HTTP port
-    wait_for:
-      port: "{{ es_http_listen_port }}"
-      timeout: 90
-    tags:
-      - elasticsearch
+    - name: Wait for elasticsearch HTTP port
+      wait_for:
+        port: "{{ es_http_listen_port }}"
+        timeout: 90
+      tags:
+        - elasticsearch
 
   rescue:
     - name: Restart elasticsearch if new HTTP port is different
@@ -151,7 +151,6 @@
     - elasticsearch
     - es-config
     - es-swap
-    - skipci
 
 - name: Enable swap in /etc/fstab
   lineinfile:
@@ -167,7 +166,6 @@
     - elasticsearch
     - es-config
     - es-swap
-    - skipci
 
 # TODO Add template for log4j settings
 # https://www.elastic.co/guide/en/elasticsearch/reference/5.4/settings.html#logging
@@ -178,7 +176,7 @@
     version: "{{ item.version | default(omit) }}"
     state: "{{ item.state | default(omit) }}"
     plugin_bin: "{{ es_plugin_bin | default(omit) }}"
-  with_items: "{{ es_plugins }}"
+  loop: "{{ es_plugins }}"
   tags:
     - elasticsearch
     - es-plugins
