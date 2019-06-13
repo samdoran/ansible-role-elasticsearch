@@ -1,6 +1,6 @@
 # Role variables
 es_group_name: "es"
-es_version: 5
+es_version: 7
 es_install_state: latest
 es_number_of_nodes: "{{ groups[es_group_name] | length }}"
 es_number_of_no_data_nodes: 0
@@ -12,6 +12,8 @@ es_ssl_proxy: no
 es_http_listen_port: "{{ es_http_port }}"
 es_disable_swap: no
 
+es_gpg_key_url: https://artifacts.elastic.co/GPG-KEY-elasticsearch
+es_repo_url: https://artifacts.elastic.co/packages/{{ es_major_version }}.x
 
 # Elasticsearch Sysconfig
 es_home: /usr/share/elasticsearch
@@ -34,6 +36,8 @@ es_max_map_count: 262144
 # elastisearch.yml
 # ---------------------------------- Cluster -----------------------------------
 es_cluster_name: elasticsearch
+es_cluster_initial_master_nodes: "{{ groups[es_group_name] | map('extract', hostvars, ['ansible_facts', 'hostname']) | list }}"
+
 
 # ------------------------------------ Node ------------------------------------
 es_node_name: "{{ ansible_facts.hostname }}"
@@ -65,10 +69,8 @@ es_minimum_master_nodes: "{{ ((es_number_of_nodes | int) // 2) + 1 }}"
 # Example of automatically generated list of unicast discovery hosts from the
 # hosts in es_group_name
 #
-# es_unicast_discovery_hosts:
-#   "{% for host in groups[es_group_name] %}
-#     {%- if host != ansible_facts.fqdn %}{{ host }}{% if not loop.last %},{% endif -%}{% endif %}
-#   {%- endfor %}"
+# es_discovery_seed_hosts:    # Use this setting for Elasticsearch >= 7.0
+# es_unicast_discovery_hosts: "{{ groups[es_group_name] | map('extract', hostvars, ['ansible_facts', 'fqdn']) | difference([ansible_facts.fqdn]) list | join(',') }}"
 
 # ---------------------------------- Gateway -----------------------------------
 # For more information, see the documentation at:

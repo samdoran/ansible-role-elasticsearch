@@ -47,6 +47,9 @@
 
 - name: Include distribution specific tasks
   include_tasks: install-{{ ansible_facts.os_family }}.yml
+  tags:
+    - elasticsearch
+    - es-config
 
 - name: Copy main elasticsearch config
   template:

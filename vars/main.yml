@@ -1,8 +1,1 @@
 es_major_version: "{{ (es_version | string).split('.')[0] | int }}"
-es_repo_url:
-  es-2:
-    baseurl: https://packages.elastic.co/elasticsearch/{{ es_major_version }}.x/centos
-    gpgkey: https://packages.elastic.co/GPG-KEY-elasticsearch
-  es-5:
-    baseurl: https://artifacts.elastic.co/packages/{{ es_major_version }}.x/yum
-    gpgkey: https://artifacts.elastic.co/GPG-KEY-elasticsearch

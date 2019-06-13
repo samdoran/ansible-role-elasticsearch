@@ -4,6 +4,9 @@
 
 # ---------------------------------- Cluster -----------------------------------
 cluster.name: {{ es_cluster_name }}
+{% if es_major_version is version_compare('7', '>=') %}
+cluster.initial_master_nodes: {{ es_cluster_initial_master_nodes }}
+{% endif %}
 
 # ------------------------------------ Node ------------------------------------
 node.name: "{{ es_node_name }}"
@@ -29,9 +32,15 @@ http.port: {{ es_http_listen_port }}
 http.max_content_length: {{ es_http_max_content_length }}mb
 
 # --------------------------------- Discovery ----------------------------------
+{% if es_major_version is version_compare('7', '>=') %}
+{% if es_discovery_seed_hosts is defined %}
+discovery.seed_hosts: {{ es_discovery_seed_hosts }}
+{% endif %}
+{% else %}
 discovery.zen.minimum_master_nodes: {{ es_minimum_master_nodes }}
 {% if es_unicast_discovery_hosts is defined %}
 discovery.zen.ping.unicast.hosts: "{{ es_unicast_discovery_hosts }}"
+{% endif %}
 {% endif %}
 
 # ---------------------------------- Gateway -----------------------------------
