@@ -55,13 +55,13 @@ Role Variables
 | Name              | Default Value       | Description          |
 |-------------------|---------------------|----------------------|
 | `es_cluster_name`    | `elasticsearch` | Name of Elasticsearch cluster. |
-| `es_node_name` | `{{ ansible_hostname }}` | Node name. |
+| `es_node_name` | `{{ ansible_facts.hostname }}` | Node name. |
 | `es_node_master` | `True` | Whether or not a node can become a master |
 | `es_node_data` | `True` | Whether or not a node can hold data |
 | `es_path_data` | `{{ es_data_dir }}` |  |
 | `es_path_logs` | `{{ es_log_dir }}` |  |
 | `es_enable_mlockall` | `True` | Whether or not to enable locking memory |
-| `es_network_host` | `["localhost", "{{ ansible_default_ipv4.address }}" ]` | List of interfaces Elasticsearch should listen on. |
+| `es_network_host` | `["localhost", "{{ ansible_facts.default_ipv4.address }}" ]` | List of interfaces Elasticsearch should listen on. |
 | `es_http_port` | `9200` | Elasticsearch HTTP port. |
 | `es_transport_port`    | 9300    | Node to node communication port   |
 | `es_http_max_content_length` | 100 | Max HTTP put size used in Elasticsearch nginx proxy config and `elasticsearch.yml` |
@@ -83,7 +83,7 @@ This role works best with a few pre and post tasks as well as some cluster healt
         es_cluster_name: "mystash"
         es_number_of_no_data_nodes: 1
 
-      pre_tasks:
+      tasks:
         - name: Disable shard allocation for the cluster
           uri:
             url: http://localhost:{{ es_http_listen_port }}/_cluster/settings
@@ -96,10 +96,9 @@ This role works best with a few pre and post tasks as well as some cluster healt
             method: PUT
             body: '{"transient":{"cluster.routing.allocation.cluster_concurrent_rebalance":"16","cluster.routing.allocation.node_concurrent_recoveries":"16","cluster.routing.allocation.node_initial_primaries_recoveries":"64"}}'
 
-      roles:
-        - elasticsearch
+        - import_role:
+            name: samdoran.elasticsearch
 
-      post_tasks:
         - name: Wait for elasticsearch node to come back up
           wait_for:
             port: "{{ es_transport_port }}"
@@ -126,14 +125,14 @@ This role works best with a few pre and post tasks as well as some cluster healt
             url: http://localhost:{{ es_http_listen_port }}/_cluster/settings
             method: PUT
             body: '{"transient":{"cluster.routing.allocation.cluster_concurrent_rebalance":"2","cluster.routing.allocation.node_concurrent_recoveries":"2","cluster.routing.allocation.node_initial_primaries_recoveries":"4"}}'
-          when: ansible_fqdn == play_hosts[-1]
+          when: ansible_facts.fqdn == play_hosts[-1]
 ```
 
 You can also make `es_unicast_discovery_hosts` dynamic using the following:
 
     es_unicast_discovery_hosts:
       "{% for host in groups[es_group_name] %}
-        {%- if host != ansible_fqdn %}{{ host }}{% if not loop.last %},{% endif -%}{% endif %}
+        {%- if host != ansible_facts.fqdn %}{{ host }}{% if not loop.last %},{% endif -%}{% endif %}
       {%- endfor %}"
 
 License

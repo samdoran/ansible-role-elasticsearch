@@ -19,7 +19,7 @@ es_conf_dir: /etc/elasticsearch
 es_data_dir: /var/lib/elasticsearch
 es_log_dir: /var/log/elasticsearch
 es_pid_dir: /var/run/elasticsearch
-es_heap_size: "{{ ansible_memtotal_mb // 2 }}m"
+es_heap_size: "{{ ansible_facts.memtotal_mb // 2 }}m"
 # es_java_opts: ""
 es_restart_on_upgrade: yes
 es_gc_log_file: /var/log/elasticsearch/gc.log
@@ -27,7 +27,7 @@ es_user: elasticsearch
 es_group: elasticsearch
 es_startup_sleep_time: 5
 es_max_open_files: 65536
-es_max_locked_memory: "{% if es_enable_mlockall %}unlimited{% else %}{{ ansible_memtotal_mb }}{% endif %}"
+es_max_locked_memory: "{% if es_enable_mlockall %}unlimited{% else %}{{ ansible_facts.memtotal_mb }}{% endif %}"
 es_max_map_count: 262144
 
 
@@ -36,7 +36,7 @@ es_max_map_count: 262144
 es_cluster_name: elasticsearch
 
 # ------------------------------------ Node ------------------------------------
-es_node_name: "{{ ansible_hostname }}"
+es_node_name: "{{ ansible_facts.hostname }}"
 es_node_master: yes
 es_node_data: yes
 
@@ -52,7 +52,7 @@ es_enable_mlockall: no
 # <http://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html>
 es_network_host:
   - _local_
-  - "{{ ansible_default_ipv4.address }}"
+  - "{{ ansible_facts.default_ipv4.address }}"
 es_http_port: 9200
 es_transport_port: 9300
 es_http_max_content_length: 100
@@ -67,7 +67,7 @@ es_minimum_master_nodes: "{{ ((es_number_of_nodes | int) // 2) + 1 }}"
 #
 # es_unicast_discovery_hosts:
 #   "{% for host in groups[es_group_name] %}
-#     {%- if host != ansible_fqdn %}{{ host }}{% if not loop.last %},{% endif -%}{% endif %}
+#     {%- if host != ansible_facts.fqdn %}{{ host }}{% if not loop.last %},{% endif -%}{% endif %}
 #   {%- endfor %}"
 
 # ---------------------------------- Gateway -----------------------------------

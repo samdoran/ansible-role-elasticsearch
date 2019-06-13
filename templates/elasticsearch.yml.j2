@@ -18,7 +18,7 @@ path.logs: {{ es_path_logs }}
 {% if es_enable_mlockall %}
 bootstrap.memory_lock: {{ es_enable_mlockall | lower }}
 {% endif %}
-{% if ansible_os_family == 'RedHat' and ansible_distribution_major_version | version_compare('6', '=') %}
+{% if ansible_os_family == 'RedHat' and ansible_distribution_major_version is version_compare('6', '=') %}
 bootstrap.system_call_filter: false
 {% endif %}
 
