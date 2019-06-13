@@ -1,14 +1,27 @@
-- hosts: all
+- name: Test Elasticsearch role
+  hosts: all
   become: true
 
   tasks:
     - debug:
         msg: >-
-          {% raw %}Testing with Ansible {{ ansible_version.full }} using Python {{ ansible_facts.python_version }}
-          on {{ ansible_facts.distribution }} {{ ansible_facts.distribution_version }}{% endraw %}
+          Testing with Ansible {{ ansible_version.full }} using Python {{ ansible_facts.python_version }}
+          on {{ ansible_facts.distribution }} {{ ansible_facts.distribution_version }}
 
     - import_role:
         name: java
 
     - import_role:
         name: elasticsearch
+
+    - name: Query Elasticsearch
+      uri:
+        url: http://localhost:9200
+      register: es_result
+
+    - name: Ensure Elasticsearch is up and running
+      assert:
+        that:
+          - es_result.status == 200
+          - "'OK' in es_result.msg"
+          - es_result.json.version.number[0] is version_compare(es_version, '==')
