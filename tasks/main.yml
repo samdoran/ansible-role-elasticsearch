@@ -3,7 +3,7 @@
 - name: Set es_http_listen_port
   set_fact:
     es_http_listen_port: "{{ es_http_port + 1 }}"
-  when: es_ssl_proxy
+  when: es_ssl_proxy | bool
   tags:
     - always
     - elasticsearch
@@ -58,7 +58,7 @@
     dest: "{{ es_conf_dir }}/jvm.options"
     regexp: ^\-{{ item }}.*$
     line: '-{{ item }}{{ es_heap_size }}'
-  when: es_major_version | version_compare('5', '>=')
+  when: es_major_version is version_compare('5', '>=')
   notify: restart elasticsearch
   loop:
     - Xms
@@ -122,7 +122,7 @@
     - es-config
     - es-nginx
     - es-nginxconfig
-  when: es_ssl_proxy
+  when: es_ssl_proxy | bool
   notify: reload nginx
 
 - name: Remove elasticsearch nginx config
