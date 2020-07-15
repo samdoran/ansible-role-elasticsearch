@@ -2,10 +2,9 @@ dependency:
   name: galaxy
 driver:
   name: docker
-lint:
-  name: yamllint
-  options:
-    config-file: molecule/default/yamllint.yml
+lint: |
+  ansible-lint -x 204,306,403,502
+  yamllint -c molecule/default/yamllint.yml .
 platforms:
   - name: elasticsearch-test
     groups:
@@ -18,21 +17,9 @@ platforms:
     pre_build_image: yes
 provisioner:
   name: ansible
-  lint:
-    name: ansible-lint
-    options:
-      exclude:
-        - molecule/default/playbook.yml
-      x:
-        - 204  # Lines should be no longer than 160 chars
-        - 306  # Shells that use pipes should set the pipefail option
-        - 403  # Package installs should not use latest
-        - 502  # All tasks should be named
   playbooks:
-    converge: ${MOLECULE_PLAYBOOK:-playbook.yml}
+    converge: ${MOLECULE_PLAYBOOK:-converge.yml}
 scenario:
   name: default
 verifier:
-  name: testinfra
-  lint:
-    name: flake8
+  name: ansible
