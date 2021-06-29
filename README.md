@@ -1,7 +1,5 @@
 Elasticsearch
-========
-[![Galaxy](https://img.shields.io/badge/galaxy-samdoran.elasticsearch-blue.svg?style=flat)](https://galaxy.ansible.com/samdoran/elasticsearch)
-[![Build Status](https://travis-ci.org/samdoran/ansible-role-elasticsearch.svg?branch=master)](https://travis-ci.org/samdoran/ansible-role-elasticsearch)
+=============
 
 Install Elasticsearch `5.x`. Heap size is dynamically calculated based on total system memory. Plugins get installed when elasticsearch is installed initially.
 
